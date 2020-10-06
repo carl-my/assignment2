@@ -53,3 +53,7 @@ y_hat <- rep(0,5)
 for (i in 1:5) {
     y_hat[i] <- 2.94 + x[i,2]*(-3.09)
 }
+
+
+
+#ZZZZZ
