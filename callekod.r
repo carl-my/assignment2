@@ -2,7 +2,8 @@
 olsFun <- function(data){
   ### set column names and add intercept column to X
   Y <- data[,1]
-  X <- cbind(rep(1,5), data[,2])
+  N <- nrow(data)
+  X <- cbind(rep(1, N), data[,2])
   
   ### calculate the formel and extract the Beta coefficient 
   beta_ols=(solve(t(X)%*% X) %*% (t(X) %*% Y))[2,1]
@@ -49,7 +50,8 @@ wlsFun(data = testData, lambda = 2)
 #### FWLS
 fwlsFun <- function(data, trueVar){
   y = data[,1]
-  X = cbind(rep(1,5), data[,2:ncol(data)])
+  N <- nrow(data)
+  X = cbind(rep(1,N), data[,2:ncol(data)])
   
   mod = lm(y ~ -1 +X)
   res = mod$residuals
@@ -59,16 +61,16 @@ fwlsFun <- function(data, trueVar){
   lambda_hat = ln_res2$coefficients[2]
   
   if(trueVar == TRUE){
-    error_cov = matrix(0, 5, 5)
-    for(i in 1:5){
+    error_cov = matrix(0, N, N)
+    for(i in 1:N){
       error_cov[i,i] <- exp(X[i,2]*lambda_hat)
     }
     
   }
   else if(trueVar == FALSE)
   {
-    error_cov = matrix(0, 5, 5)
-    for(i in 1:5){
+    error_cov = matrix(0, N, N)
+    for(i in 1:N){
       error_cov[i,i] <- 1 + X[i,2]*lambda_hat
     }
     
@@ -137,6 +139,8 @@ SimFun <- function(n, sim_reps, seed, lambda) {
 
     return(betas)
 }
+
+
 
 SimFun(25, 4, 2020, 2)
 
