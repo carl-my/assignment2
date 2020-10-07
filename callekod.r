@@ -1,4 +1,5 @@
 HEJ JOHANNES O TOVE
+HEJ IGEN
 library(StatProg)
 
 fwlsFun <- function(data, trueVar){
