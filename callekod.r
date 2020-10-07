@@ -1,3 +1,5 @@
+library(tidyverse)
+
 #### OLS
 olsFun <- function(data){
   ### set column names and add intercept column to X
@@ -148,12 +150,17 @@ for (i in seq_along(x)) {
     var_obs[i,] <- (SimFun(x[i], 100, 2020, 2))
 }
 
-var_obs
+var_obs = as.data.frame(var_obs)
+rownames(var_obs) = c(25, 50, 100, 200, 400)
 
-install.packages("ggplot2")
-install.packages("tidyverse")
-library(ggplot2)
+ggplot(data = var_obs) + 
+  geom_line(aes(x = as.numeric(rownames(var_obs)), y = V1), color = "red") +
+  geom_line(aes(x = as.numeric(rownames(var_obs)), y = V2), color = "blue") +
+  geom_line(aes(x = as.numeric(rownames(var_obs)), y = V3), color = "green") +
+  geom_line(aes(x = as.numeric(rownames(var_obs)), y = V4), color = "orange") 
 
-ggplot(aes(x = x, y = var_obs[,1])) +
-    geom_point()
+
+
+
+
 
