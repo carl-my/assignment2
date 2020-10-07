@@ -50,8 +50,8 @@ wlsFun(data = testData, lambda = 2)
 
 #### FWLS
 fwlsFun <- function(data, trueVar){
-  y = testData[,1]
-  X = cbind(rep(1,5), testData[,2:ncol(testData)])
+  y = data[,1]
+  X = cbind(rep(1,5), data[,2:ncol(data)])
   
   mod = lm(y ~ -1 +X)
   res = mod$residuals
