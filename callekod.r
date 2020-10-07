@@ -132,15 +132,28 @@ SimFun <- function(n, sim_reps, seed, lambda) {
     # estimate sim
     mat[i,1] <- olsFun(dat)
     mat[i,2] <- wlsFun(dat, lambda)
-    mat[i,3]<- fwlsFun(dat, trueVar = FALSE)
     mat[i,4]<- fwlsFun(dat, trueVar = TRUE)
+    mat[i,3]<- fwlsFun(dat, trueVar = FALSE)
     }
     betas <- apply(mat, 2, var)
 
     return(betas)
 }
 
+x <- c(25, 50, 100, 200, 400)
 
+var_obs <- matrix(0, ncol = 4, nrow = 5)
 
-SimFun(25, 4, 2020, 2)
+for (i in seq_along(x)) {
+    var_obs[i,] <- (SimFun(x[i], 100, 2020, 2))
+}
+
+var_obs
+
+install.packages("ggplot2")
+install.packages("tidyverse")
+library(ggplot2)
+
+ggplot(aes(x = x, y = var_obs[,1])) +
+    geom_point()
 
