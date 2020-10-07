@@ -89,6 +89,7 @@ DataFun <- function(n, lambda) {
     x <- runif(n, min = 0, max = 2)
 
     # standard deviation
+    s <- NULL
     for (i in seq_len(n)) {
         s[i] <- exp(x[i]*lambda)
     }
@@ -104,20 +105,24 @@ DataFun <- function(n, lambda) {
     }
 
     # container matrix
-    mat <- matrix(data = 0, ncol = 3, nrow = n)
+    mat <- matrix(data = 0, ncol = 2, nrow = n)
 
     # creating matrix of indepedent and dependent variables
     for (i in seq_len(n)) {
         mat[i, 1] <- y[i]
         mat[i, 2] <- x[i]
-        mat[i, 3] <- epsilon[i]
     }
     return(mat)
 }
 
 #####
 
-
+SimFun <- function(n, sim_reps, seed, lambda) {
+    set.seed(seed)
+    N <- sim_reps
+    DataFun()
+    
+}
 
 
 
