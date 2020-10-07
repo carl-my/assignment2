@@ -1,5 +1,8 @@
 HEJ JOHANNES O TOVE
 HEJ IGEN
+
+HEJ IGEN TVÅ GÅNGER
+
 library(StatProg)
 
 fwlsFun <- function(data, trueVar){
