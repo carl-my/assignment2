@@ -1,4 +1,6 @@
 library(StatProg)
+library(Rfast)
+install.packages("Rfast")
 
 #### OLS
 olsFun <- function(data){
@@ -27,7 +29,7 @@ wlsFun <- function(data, lambda){
     
     ### set column names and add intercept column for X
     Y <- data[,1]
-    X <- cbind(rep(1,N), data[,2])
+    X <- cbind(rep(1,N), testData[,2])
     
     ### create a zero matrix N x N
     Z <- matrix(0, N, N)
@@ -50,8 +52,8 @@ wlsFun(data = testData, lambda = 2)
 
 #### FWLS
 fwlsFun <- function(data, trueVar){
-  y = data[,1]
-  X = cbind(rep(1,5), data[,2:ncol(data)])
+  y = testData[,1]
+  X = cbind(rep(1,5), testData[,2:ncol(testData)])
   
   mod = lm(y ~ -1 +X)
   res = mod$residuals
@@ -122,22 +124,31 @@ SimFun <- function(n, sim_reps, seed, lambda) {
     set.seed(seed)
     R <- sim_reps
 
+    # saving betas
+    mat <- matrix(0, nrow = R, ncol = 4)
+
     for (i in seq_len(R)) {
     # data sim
     dat <- DataFun(n, lambda)
     # estimate sim
-    olsB <- olsFun(dat)
-    wlsB <- wlsFun(dat)
-    fwlsBF <- fwlsFun(dat, trueVar = FALSE)
-    fwlsBT <- fwlsFun(dat, trueVar = TRUE)
-        
-    # saving betas
-    mat <- matrix(0, nrow = R, ncol = 4)
-
+    mat[i,1] <- olsFun(dat)
+    mat[i,2] <- wlsFun(dat, lambda)
+    mat[i,3]<- fwlsFun(dat, trueVar = FALSE)
+    mat[i,4]<- fwlsFun(dat, trueVar = TRUE)
     }
+
+    return(mat)
 }
 
-SimFun(5, 1, 2020, 2)
+datat <- 
+SimFun(5, 5, 2020, 2)
+
+datat
+
+sapply(datat[1,1], var)
+mapply(datat, var)
+apply(datat, 2, var)
+datat
 
 fwlsFun(DataFun(5,2), trueVar = TRUE)
 
