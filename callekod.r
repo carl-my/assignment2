@@ -29,7 +29,7 @@ wlsFun <- function(data, lambda){
     
     ### set column names and add intercept column for X
     Y <- data[,1]
-    X <- cbind(rep(1,N), testData[,2])
+    X <- cbind(rep(1,N), data[,2])
     
     ### create a zero matrix N x N
     Z <- matrix(0, N, N)
