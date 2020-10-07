@@ -88,14 +88,14 @@ DataFun <- function(n, lambda) {
     # independent variable
     x <- runif(n, min = 0, max = 2)
 
-    # standard deviation
+    # standard deviation in epsilons normal distribution
     s <- NULL
     for (i in seq_len(n)) {
         s[i] <- exp(x[i]*lambda)
     }
 
     # error term
-    epsilon <- rnorm(n, mean = rep(0, 5), sd = s)
+    epsilon <- rnorm(n, mean = rep(0, n), sd = s)
 
     beta <- 2
 
@@ -120,9 +120,10 @@ DataFun <- function(n, lambda) {
 SimFun <- function(n, sim_reps, seed, lambda) {
     set.seed(seed)
     N <- sim_reps
-    DataFun()
-    
+    DataFun(n, lambda)
 }
+
+SimFun()
 
 
 
