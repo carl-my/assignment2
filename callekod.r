@@ -84,3 +84,12 @@ wlsFun <- function(data, lambda){
 }
 
 wlsFun(data = testData, lambda = 2)
+
+
+#####
+
+
+
+
+
+
