@@ -2,7 +2,6 @@ HEJ JOHANNES O TOVE
 library(StatProg)
 
 fwlsFun <- function(data, trueVar){
-  # Assume some structure for the error variance,
   y = testData[,1]
   X = cbind(rep(1,5), testData[,2:ncol(testData)])
   
@@ -29,7 +28,6 @@ fwlsFun <- function(data, trueVar){
     }
     
   }
-  # Run an OLS regression on the original model
 beta_fwls = (solve(t(X)%*%solve(error_cov)%*%X)%*%t(X)%*%solve(error_cov)%*%y)[2,1]
 
 return(beta_fwls)
