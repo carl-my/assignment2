@@ -82,6 +82,7 @@ return(beta_fwls)
 fwlsFun(data = testData, trueVar = TRUE)
 fwlsFun(data = testData, trueVar = FALSE)
 
+
 #### Data simulation
 DataFun <- function(n, lambda) {
 
@@ -119,12 +120,25 @@ DataFun <- function(n, lambda) {
 
 SimFun <- function(n, sim_reps, seed, lambda) {
     set.seed(seed)
-    N <- sim_reps
-    DataFun(n, lambda)
+    R <- sim_reps
+
+    for (i in seq_len(R)) {
+    # data sim
+    dat <- DataFun(n, lambda)
+    # estimate sim
+    olsB <- olsFun(dat)
+    wlsB <- wlsFun(dat)
+    fwlsBF <- fwlsFun(dat, trueVar = FALSE)
+    fwlsBT <- fwlsFun(dat, trueVar = TRUE)
+        
+    # saving betas
+    mat <- matrix(0, nrow = R, ncol = 4)
+
+    }
 }
 
-SimFun()
+SimFun(5, 1, 2020, 2)
 
-
+fwlsFun(DataFun(5,2), trueVar = TRUE)
 
 
