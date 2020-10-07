@@ -1,6 +1,39 @@
 HEJ JOHANNES O TOVE
 library(StatProg)
 
+fwlsFun <- function(data, trueVar){
+  # Assume some structure for the error variance,
+  y = testData[,1]
+  X = cbind(rep(1,5), testData[,2:ncol(testData)])
+  
+  mod = lm(y ~ -1 +X)
+  res = mod$residuals
+  res2 = res^2
+  
+  ln_res2 = lm(log(res2) ~  -1 +X)
+  lambda_hat = ln_res2$coefficients[2]
+
+  
+  if(trueVar == TRUE){
+    error_cov = matrix(0, 5, 5)
+    for(i in 1:5){
+      error_cov[i,i] <- exp(X[i,2]*lambda_hat)
+    }
+    
+  }
+  else if(trueVar == FALSE)
+  {
+    error_cov = matrix(0, 5, 5)
+    for(i in 1:5){
+      error_cov[i,i] <- 1 + X[i,2]*lambda_hat
+    }
+    
+  }
+  # Run an OLS regression on the original model
+beta_fwls = (solve(t(X)%*%solve(error_cov)%*%X)%*%t(X)%*%solve(error_cov)%*%y)[2,1]
+
+return(beta_fwls)
+}
 
 DataFun <- function(n, lambda) {
 
