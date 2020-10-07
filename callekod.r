@@ -5,7 +5,7 @@ install.packages("Rfast")
 #### OLS
 olsFun <- function(data){
   ### set column names and add intercept column to X
-  Y <- testData[,1]
+  Y <- data[,1]
   X <- cbind(rep(1,5), data[,2])
   
   ### calculate the formel and extract the Beta coefficient 
