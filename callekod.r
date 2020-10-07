@@ -115,24 +115,6 @@ DataFun <- function(n, lambda) {
     return(mat)
 }
 
-DataFun(5, 2)
-
-rnorm(2, mean = c(0,10), sd = c(1000, 1))
-
-
-## ols 
-x <- cbind(rep(1, 5), testData[,2])
-y <- testData[,1]
-
-ols <- solve(t(x) %*% x) %*% t(x) %*% y
-ols[2]
-
-y_hat <- rep(0,5)
-
-for (i in 1:5) {
-    y_hat[i] <- 2.94 + x[i,2]*(-3.09)
-}
-
 #####
 
 
