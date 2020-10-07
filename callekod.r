@@ -4,7 +4,7 @@ library(StatProg)
 olsFun <- function(data){
   ### set column names and add intercept column to X
   Y <- testData[,1]
-  X <- cbind(rep(1,5), testData[,2])
+  X <- cbind(rep(1,5), data[,2])
   
   ### calculate the formel and extract the Beta coefficient 
   beta_ols=(solve(t(X)%*% X) %*% (t(X) %*% Y))[2,1]
@@ -59,7 +59,6 @@ fwlsFun <- function(data, trueVar){
   
   ln_res2 = lm(log(res2) ~  -1 +X)
   lambda_hat = ln_res2$coefficients[2]
-
   
   if(trueVar == TRUE){
     error_cov = matrix(0, 5, 5)
