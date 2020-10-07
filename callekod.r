@@ -54,6 +54,33 @@ for (i in 1:5) {
     y_hat[i] <- 2.94 + x[i,2]*(-3.09)
 }
 
+##### weighted least squares
 
+wlsFun <- function(data, lambda){
+  if (is.numeric(lambda)==FALSE){print("lambda is not numeric") } 
+  else{
+    ### create variable for the number of observations in the dataset
+    N <- nrow(data)
+    
+    ### set column names and add intercept column for X
+    Y <- data[,1]
+    X <- cbind(rep(1,N), testData[,2])
+    
+    ### create a zero matrix N x N
+    Z <- matrix(0, N, N)
+    
+    ## make a forloop to put in the error terms on the diagonal 
+    ## to create the error covariance matrix
+    er <- NULL
+    for (i in 1:N) {
+      er[i] <- exp(X[i,2]*lambda)
+      Z[i,i] <- er[i] 
+    }
+    ### calculate and extract the Beta coefficient
+    beta_wls = ((solve(t(X)%*%(solve(Z))%*%X)%*%t(X)%*%
+                   (solve(Z))%*%Y))[2,1]
+  return(beta_wls)
+  }
+}
 
-#ZZZZZ
+wlsFun(data = testData, lambda = 2)
