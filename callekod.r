@@ -1,7 +1,3 @@
-library(StatProg)
-library(Rfast)
-install.packages("Rfast")
-
 #### OLS
 olsFun <- function(data){
   ### set column names and add intercept column to X
@@ -103,6 +99,7 @@ DataFun <- function(n, lambda) {
     beta <- 2
 
     # dependent variable
+    y <- NULL
     for (i in seq_len(n)) {
         y[i] <- beta*x[i] + epsilon[i]
     }
@@ -136,20 +133,10 @@ SimFun <- function(n, sim_reps, seed, lambda) {
     mat[i,3]<- fwlsFun(dat, trueVar = FALSE)
     mat[i,4]<- fwlsFun(dat, trueVar = TRUE)
     }
+    betas <- apply(mat, 2, var)
 
-    return(mat)
+    return(betas)
 }
 
-datat <- 
-SimFun(5, 5, 2020, 2)
-
-datat
-
-sapply(datat[1,1], var)
-mapply(datat, var)
-apply(datat, 2, var)
-datat
-
-fwlsFun(DataFun(5,2), trueVar = TRUE)
-
+SimFun(25, 4, 2020, 2)
 
