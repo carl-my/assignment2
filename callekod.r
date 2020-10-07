@@ -119,6 +119,17 @@ DataFun <- function(n, lambda) {
 
 
 
+<<<<<<< Updated upstream
 
+=======
+z <- cbind(var_obs, x)
+z <- as.data.frame(z)
+
+ggplot(z) +
+    geom_line(aes(x = x, y = V1)) +
+    geom_line(aes(x = x, y = V2)) + 
+    geom_line(aes(x = x, y = V3)) +
+    geom_line(aes(x = x, y = V4)) 
+>>>>>>> Stashed changes
 
 
