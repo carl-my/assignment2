@@ -1,14 +1,19 @@
 library(StatProg)
 library(tidyverse)
 
-data("galaxies")
-x = as.numeric(galaxies)
+galaxies <- as.data.frame(galaxies)
+names(galaxies) <- "km"
+
+ggplot(galaxies, aes(x = km)) +
+  geom_density()
+
+x = galaxies$km
 
 gammaUpdate = function(x, mu, sigma, pi){
   pdf = t(sapply(x, dnorm, mean = mu, sd = sigma))
   for(n in 1:length(x)){
     for(k in 1:length(mu)){
-      pdf[1, 2] = pi[k]*pdf[n, k]
+      pdf[n, k] = pi[k]*pdf[n, k]
     }
   }
   gam = as.data.frame(matrix(NA, ncol = length(pi), nrow = length(x)))
@@ -20,7 +25,8 @@ gammaUpdate = function(x, mu, sigma, pi){
   return(as.data.frame(gam))
 }
 
-mu = c(10000, 20000, 32000)
-sigma = c(1000, 2000, 3000)
+mu = c(10, 20, 30)
+sigma = c(2, 2, 2)
 pi = c(1/3, 1/3, 1/3)
-test = gammaUpdate(x, mu, sigma, pi)
+resp = gammaUpdate(x, mu, sigma, pi)
+resp[1,]
