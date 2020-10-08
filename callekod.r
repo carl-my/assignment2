@@ -174,4 +174,24 @@ ggplot(z) +
     geom_line(aes(x = x, y = V4)) 
 >>>>>>> Stashed changes
 
+##### 4. Plot variance estimates
+
+colnames(var_obs) = c("OLS","WLS","FWLST","FWLSF")
+rownames(var_obs) = c("25","50","100","200","400")
+
+ggplot(as.data.frame(var_obs),aes(x=as.numeric(rownames(var_obs)))) +
+  geom_line(aes(y = OLS, colour = "OLS")) + 
+  geom_line(aes(y = WLS, colour = "WLS")) +
+  geom_line(aes(y = FWLST, colour = "FWLST")) + 
+  geom_line(aes(y = FWLSF, colour = "FWLSF")) +
+  labs(x="Number of obsvervations",y="Variance",
+       title="Variance estimates of beta for each function vs sample size") +
+  theme(legend.title = element_blank()) +
+  scale_x_continuous(breaks=c(0,25,50,100,200,400),limits=c(0, 400))
+
+#############
+
+
+
+
 
