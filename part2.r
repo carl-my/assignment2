@@ -40,6 +40,16 @@ sigmaUpdate = function(x, gamma, mu){
   return(sigma)
 }
 
+piUpdate = function(gamma){
+  N <- ncol(gamma)
+  tau <- NULL
+  for (i in 1:N) {
+      tau[i] <- sum(gamma[,i])/sum(gamma)
+  }
+  return(tau)
+}
+
+
 #### Testkod
 mu = c(10, 20, 30)
 sigma = c(2, 2, 2)
