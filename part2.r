@@ -1,5 +1,5 @@
 library(StatProg)
-library(tidyverse)
+library(ggplot2)
 
 galaxies <- as.data.frame(galaxies)
 names(galaxies) <- "km"
@@ -68,21 +68,20 @@ mu = muUpdate(galaxies, resp)
 sigma = sigmaUpdate(galaxies, resp, mu)
 probs = piUpdate(resp)
 
-cat("mu:", mu,
-"\nsigma:", sigma,
-"\nprobs:", probs,
-"\nresp[1,]", resp[1,])
-
 ### Log-likelihood 
 loglik = function(x, pi, mu, sigma){
   sum_pdf = matrix(0, nrow = length(x))
   loglike = 0
   for(n in 1:length(x)){
+
     for(k in 1:length(pi)){
       sum_pdf[n] = sum_pdf[n] + (pi[k] * dnorm(x[n], mu[k], sigma[k]))
     }
+
     loglike = loglike + log(sum_pdf[n])
   }
   return(loglike)
 }
+
+loglik(galaxies, probs, mu, sigma)
 
