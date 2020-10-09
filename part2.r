@@ -95,3 +95,15 @@ currentLogLik = loglik(x, p, mu, sigma)
 for(i in 1:reps){
 mu_temp = rnorm(K, mean(x), 10)
 sigma_temp = sqrt(rgamma(10, 5))
+ p_temp = runif(K)
+p_temp = p_temp/sum(p_temp)
+tempLogLik = loglik(x, p_temp, mu_temp, sigma_temp)
+if(tempLogLik > currentLogLik){
+mu = mu_temp
+sigma = sigma_temp
+p = p_temp
+currentLogLik = tempLogLik
+}
+}
+return(list("mu" = mu, "sigma" = sigma, "p" = p))
+}
