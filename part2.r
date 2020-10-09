@@ -17,13 +17,13 @@ gammaUpdate = function(x, mu, sigma, pi){
       pdf[n, k] = pi[k]*pdf[n, k]
     }
   }
-  gam = as.data.frame(matrix(NA, ncol = length(pi), nrow = length(x)))
+  gamma = as.data.frame(matrix(NA, ncol = length(pi), nrow = length(x)))
   for(n in 1:length(x)){
     for(k in 1:length(mu)){
-      gam[n, k] = pdf[n, k]/sum(pdf[n,])
+      gamma[n, k] = pdf[n, k]/sum(pdf[n,])
     }
   }
-  return(as.data.frame(gam))
+  return(as.data.frame(gamma))
 }
 
 ### Sigma
