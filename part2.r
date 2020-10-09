@@ -41,9 +41,8 @@ sigmaUpdate = function(x, gamma, mu){
 }
 
 piUpdate = function(gamma){
-  N <- ncol(gamma)
-  tau <- NULL
-  for (i in 1:N) {
+  pi <- NULL
+  for (i in 1:ncol(gamma)) {
       pi[i] <- sum(gamma[,i])/sum(gamma)
   }
   return(pi)
