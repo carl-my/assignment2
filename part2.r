@@ -86,3 +86,12 @@ loglik = function(x, pi, mu, sigma){
   return(loglike)
 }
 
+initialValues = function(x, K, reps = 100){
+mu = rnorm(K, mean(x), 5)
+sigma = sqrt(rgamma(K, 5))
+p = runif(K)
+p = p/sum(p)
+currentLogLik = loglik(x, p, mu, sigma)
+for(i in 1:reps){
+mu_temp = rnorm(K, mean(x), 10)
+sigma_temp = sqrt(rgamma(10, 5))
