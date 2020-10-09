@@ -85,3 +85,38 @@ loglik = function(x, pi, mu, sigma){
 
 loglik(galaxies, probs, mu, sigma)
 
+initialValues = function(x, K, reps = 100){
+mu = rnorm(K, mean(x), 5)
+sigma = sqrt(rgamma(K, 5))
+p = runif(K)
+p = p/sum(p)
+currentLogLik = loglik(x, p, mu, sigma)
+for(i in 1:reps){
+mu_temp = rnorm(K, mean(x), 10)
+sigma_temp = sqrt(rgamma(10, 5))
+ p_temp = runif(K)
+p_temp = p_temp/sum(p_temp)
+tempLogLik = loglik(x, p_temp, mu_temp, sigma_temp)
+if(tempLogLik > currentLogLik){
+mu = mu_temp
+sigma = sigma_temp
+p = p_temp
+currentLogLik = tempLogLik
+}
+}
+return(list("mu" = mu, "sigma" = sigma, "p" = p))
+}
+
+EM = function(x, K, tol = 0.001){
+inits = initialValues(x, K, 1000)
+mu = inits$mu
+sigma = inits$sigma
+prob = inits$p
+return(list('loglik' = logLik, 'mu' = mu, 'sigma' = sigma, 'prob' = prob))
+}
+
+while(loglikDiff > tol){
+# your code
+loglikDiff = abs(prevLoglik - currentLogLik)
+}
+
