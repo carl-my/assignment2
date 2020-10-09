@@ -1,12 +1,11 @@
 library(StatProg)
 library(tidyverse)
 
-
 galaxies <- as.data.frame(galaxies)
 names(galaxies) <- "km"
 
 ggplot(galaxies, aes(x = km)) +
-    geom_density()
+  geom_density()
 
 galaxies = galaxies$km
 
