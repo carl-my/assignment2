@@ -8,7 +8,7 @@ names(galaxies) <- "km"
 ggplot(galaxies, aes(x = km)) +
     geom_density()
 
-x = galaxies$km
+galaxies = galaxies$km
 
 gammaUpdate = function(x, mu, sigma, pi){
   pdf = t(sapply(x, dnorm, mean = mu, sd = sigma))
