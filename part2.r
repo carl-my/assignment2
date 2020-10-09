@@ -25,6 +25,16 @@ gammaUpdate = function(x, mu, sigma, pi){
   return(as.data.frame(gamma))
 }
 
+# mu
+muUpdate = function(x, gamma){
+K <- ncol(gamma)
+mu <- NULL
+for (i in seq_len(K)) {
+    mu[i] <- sum(gamma[,i]*x)/sum(gamma[,i])
+}
+return(mu)
+}
+
 ### Sigma
 sigmaUpdate = function(x, gamma, mu){
   N = matrix(0, ncol= ncol(gamma))
