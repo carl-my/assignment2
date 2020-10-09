@@ -44,9 +44,9 @@ piUpdate = function(gamma){
   N <- ncol(gamma)
   tau <- NULL
   for (i in 1:N) {
-      tau[i] <- sum(gamma[,i])/sum(gamma)
+      pi[i] <- sum(gamma[,i])/sum(gamma)
   }
-  return(tau)
+  return(pi)
 }
 
 
