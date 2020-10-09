@@ -26,6 +26,20 @@ gammaUpdate = function(x, mu, sigma, pi){
   return(as.data.frame(gam))
 }
 
+### Sigma
+sigmaUpdate = function(x, gamma, mu){
+  N = matrix(0, ncol= ncol(gamma))
+  sigma = matrix(0, ncol = ncol(gamma))
+  for(k in 1:ncol(gamma)){
+    for(n in 1:length(x)){
+      sigma[k] = sigma[k] + gamma[n,k]*(x[n]-mu[k])^2
+      N[k] = N[k] + gamma[n,k]
+    }
+    sigma[k] = sqrt(sigma[k]/N[k])
+  }
+  return(sigma)
+}
+
 mu = c(10, 20, 30)
 sigma = c(2, 2, 2)
 probs = c(1/3, 1/3, 1/3)
