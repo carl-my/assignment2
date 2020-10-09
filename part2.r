@@ -107,16 +107,44 @@ currentLogLik = tempLogLik
 return(list("mu" = mu, "sigma" = sigma, "p" = p))
 }
 
+##################################################
+# EM algo
+##################################################
 EM = function(x, K, tol = 0.001){
+
 inits = initialValues(x, K, 1000)
 mu = inits$mu
 sigma = inits$sigma
 prob = inits$p
-return(list('loglik' = logLik, 'mu' = mu, 'sigma' = sigma, 'prob' = prob))
+
+logliktest <- NULL
+i <- 1
+prevLoglik <- 0
+logliktest <- 0
+
+# while loop
+while(loglikDiff > tol){
+
+gamma <- gammaUpdate(galaxies, mu, sigma, pi)
+mu <- muUpdate(x, gamma)
+sigma <- sigmaUpdate(x, gamma, mu)
+pi <- piUpdate(gamma)
+
+currentLogLik <- loglik(galaxies, probs, mu, sigma)
+
+loglikDiff <- abs(prevLoglik - currentLogLik)
+
+prevLoglik <- currentLogLik 
+
+logliktest[i]  <- currentLogLik
+i = i + 1
+
 }
 
-while(loglikDiff > tol){
-# your code
-loglikDiff = abs(prevLoglik - currentLogLik)
+return(list('loglik' = currentLogLik, 'loglikt' = logliktest, 'mu' = mu, 'sigma' = sigma, 'prob' = prob))
 }
+
+# se hur loglikelihood förändras för varje iteration
+EM(galaxies, 3)$loglikt
+
 
