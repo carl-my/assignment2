@@ -107,3 +107,17 @@ currentLogLik = tempLogLik
 }
 return(list("mu" = mu, "sigma" = sigma, "p" = p))
 }
+
+EM = function(x, K, tol = 0.001){
+inits = initialValues(x, K, 1000)
+mu = inits$mu
+sigma = inits$sigma
+prob = inits$p
+return(list('loglik' = logLik, 'mu' = mu, 'sigma' = sigma, 'prob' = prob))
+}
+
+while(loglikDiff > tol){
+# your code
+loglikDiff = abs(prevLoglik - currentLogLik)
+}
+
