@@ -66,12 +66,13 @@ cat("mu:", mu,
 ### Log-likelihood 
 loglik = function(x, pi, mu, sigma){
   sum_pdf = matrix(0, nrow = length(x))
-  loglik = 0
+  loglike = 0
   for(n in 1:length(x)){
     for(k in 1:length(pi)){
       sum_pdf[n] = sum_pdf[n] + (pi[k] * dnorm(x[n], mu[k], sigma[k]))
     }
-    loglik = loglik_2 + log(sum_pdf[n])
+    loglike = loglike + log(sum_pdf[n])
   }
+  return(loglike)
 }
 
