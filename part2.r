@@ -40,6 +40,7 @@ sigmaUpdate = function(x, gamma, mu){
   return(sigma)
 }
 
+#### Testkod
 mu = c(10, 20, 30)
 sigma = c(2, 2, 2)
 probs = c(1/3, 1/3, 1/3)
