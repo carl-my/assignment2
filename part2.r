@@ -1,9 +1,5 @@
 library(StatProg)
 library(tidyverse)
-<<<<<<< HEAD
-=======
-
->>>>>>> main
 
 galaxies <- as.data.frame(galaxies)
 names(galaxies) <- "km"
@@ -11,7 +7,7 @@ names(galaxies) <- "km"
 ggplot(galaxies, aes(x = km)) +
   geom_density()
 
-x = galaxies$km
+galaxies = galaxies$km
 
 gammaUpdate = function(x, mu, sigma, pi){
   pdf = t(sapply(x, dnorm, mean = mu, sd = sigma))
@@ -20,40 +16,39 @@ gammaUpdate = function(x, mu, sigma, pi){
       pdf[n, k] = pi[k]*pdf[n, k]
     }
   }
-  gam = as.data.frame(matrix(NA, ncol = length(pi), nrow = length(x)))
+  gamma = as.data.frame(matrix(NA, ncol = length(pi), nrow = length(x)))
   for(n in 1:length(x)){
     for(k in 1:length(mu)){
-      gam[n, k] = pdf[n, k]/sum(pdf[n,])
+      gamma[n, k] = pdf[n, k]/sum(pdf[n,])
     }
   }
-  return(as.data.frame(gam))
+  return(as.data.frame(gamma))
 }
 
-<<<<<<< HEAD
-mu = c(10, 20, 30)
-sigma = c(2, 2, 2)
-pi = c(1/3, 1/3, 1/3)
-resp = gammaUpdate(x, mu, sigma, pi)
-resp[1,]
-=======
-x = galaxies$km
-
-gammaUpdate = function(x, mu, sigma, pi){
-  pdf = t(sapply(x, dnorm, mean = mu, sd = sigma))
-  for(n in 1:length(x)){
-    for(k in 1:length(mu)){
-      pdf[n, k] = pi[k]*pdf[n, k]
+### Sigma
+sigmaUpdate = function(x, gamma, mu){
+  N = matrix(0, ncol= ncol(gamma))
+  sigma = matrix(0, ncol = ncol(gamma))
+  for(k in 1:ncol(gamma)){
+    for(n in 1:length(x)){
+      sigma[k] = sigma[k] + gamma[n,k]*(x[n]-mu[k])^2
+      N[k] = N[k] + gamma[n,k]
     }
+    sigma[k] = sqrt(sigma[k]/N[k])
   }
-  gam = as.data.frame(matrix(NA, ncol = length(pi), nrow = length(x)))
-  for(n in 1:length(x)){
-    for(k in 1:length(mu)){
-      gam[n, k] = pdf[n, k]/sum(pdf[n,])
-    }
-  }
-  return(as.data.frame(gam))
+  return(sigma)
 }
 
+piUpdate = function(gamma){
+  pi <- NULL
+  for (i in 1:ncol(gamma)) {
+      pi[i] <- sum(gamma[,i])/sum(gamma)
+  }
+  return(pi)
+}
+
+
+#### Testkod
 mu = c(10, 20, 30)
 sigma = c(2, 2, 2)
 probs = c(1/3, 1/3, 1/3)
@@ -68,6 +63,15 @@ cat("mu:", mu,
 "\nprobs:", probs,
 "\nresp[1,]", resp[1,])
 
+### Log-likelihood 
+loglik = function(x, pi, mu, sigma){
+  sum_pdf = matrix(0, nrow = length(x))
+  loglik = 0
+  for(n in 1:length(x)){
+    for(k in 1:length(pi)){
+      sum_pdf[n] = sum_pdf[n] + (pi[k] * dnorm(x[n], mu[k], sigma[k]))
+    }
+    loglik = loglik_2 + log(sum_pdf[n])
+  }
+}
 
-
->>>>>>> main
