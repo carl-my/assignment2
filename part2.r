@@ -57,17 +57,6 @@ piUpdate = function(gamma){
   return(pi)
 }
 
-
-#### Testkod
-mu = c(10, 20, 30)
-sigma = c(2, 2, 2)
-probs = c(1/3, 1/3, 1/3)
-
-resp = gammaUpdate(galaxies, mu, sigma, probs)
-mu = muUpdate(galaxies, resp)
-sigma = sigmaUpdate(galaxies, resp, mu)
-probs = piUpdate(resp)
-
 ### Log-likelihood 
 loglik = function(x, pi, mu, sigma){
   sum_pdf = matrix(0, nrow = length(x))
@@ -83,28 +72,26 @@ loglik = function(x, pi, mu, sigma){
   return(loglike)
 }
 
-loglik(galaxies, probs, mu, sigma)
-
 initialValues = function(x, K, reps = 100){
-mu = rnorm(K, mean(x), 5)
-sigma = sqrt(rgamma(K, 5))
-p = runif(K)
-p = p/sum(p)
-currentLogLik = loglik(x, p, mu, sigma)
-for(i in 1:reps){
-mu_temp = rnorm(K, mean(x), 10)
-sigma_temp = sqrt(rgamma(10, 5))
- p_temp = runif(K)
-p_temp = p_temp/sum(p_temp)
-tempLogLik = loglik(x, p_temp, mu_temp, sigma_temp)
-if(tempLogLik > currentLogLik){
-mu = mu_temp
-sigma = sigma_temp
-p = p_temp
-currentLogLik = tempLogLik
-}
-}
-return(list("mu" = mu, "sigma" = sigma, "p" = p))
+    mu = rnorm(K, mean(x), 5)
+    sigma = sqrt(rgamma(K, 5))
+    p = runif(K)
+    p = p/sum(p)
+    currentLogLik = loglik(x, p, mu, sigma)
+    for(i in 1:reps){
+        mu_temp = rnorm(K, mean(x), 10)
+        sigma_temp = sqrt(rgamma(10, 5))
+        p_temp = runif(K)
+        p_temp = p_temp/sum(p_temp)
+        tempLogLik = loglik(x, p_temp, mu_temp, sigma_temp)
+        if(tempLogLik > currentLogLik){
+            mu = mu_temp
+            sigma = sigma_temp
+            p = p_temp
+            currentLogLik = tempLogLik
+        }
+    }
+    return(list("mu" = mu, "sigma" = sigma, "p" = p))
 }
 
 ##################################################
@@ -117,20 +104,20 @@ mu = inits$mu
 sigma = inits$sigma
 prob = inits$p
 
-logliktest <- NULL
 i <- 1
-prevLoglik <- 0
 logliktest <- 0
 
+prevLoglik <- 0
+loglikDiff<- 0
 # while loop
 while(loglikDiff > tol){
 
-gamma <- gammaUpdate(galaxies, mu, sigma, pi)
+gamma <- gammaUpdate(x, mu, sigma, pi)
 mu <- muUpdate(x, gamma)
 sigma <- sigmaUpdate(x, gamma, mu)
 pi <- piUpdate(gamma)
 
-currentLogLik <- loglik(galaxies, probs, mu, sigma)
+currentLogLik <- loglik(x, probs, mu, sigma)
 
 loglikDiff <- abs(prevLoglik - currentLogLik)
 
@@ -145,6 +132,7 @@ return(list('loglik' = currentLogLik, 'loglikt' = logliktest, 'mu' = mu, 'sigma'
 }
 
 # se hur loglikelihood förändras för varje iteration
-EM(galaxies, 3)$loglikt
+EM(galaxies, 3)
+
 
 
