@@ -132,7 +132,6 @@ final_plot = matrix(0, ncol = 4, nrow= length(galaxies))
 for(k in 2:5){
   z = EM(galaxies, k)
   print(z$loglik)
-  temp = 0
   for(i in 1:k){
     final_plot[,(k-1)] = final_plot[,(k-1)] + z$prob[i] * dnorm(galaxies, z$mu[i], z$sigma[i])
   }
