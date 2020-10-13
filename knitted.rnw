@@ -30,7 +30,7 @@ olsFun <- function(data){
   return(beta_ols)
 }
 
-Här är en kommentar om OLS. blabla bla blabakljdgklajkl
+#Här är en kommentar om OLS. blabla bla blabakljdgklajkl
 
 testData <- cbind( c(0.62, 0.18, 3.92, 0.80, -5.15),
 c(0.44, 1.49, 0.69, 0.13, 1.90) )
