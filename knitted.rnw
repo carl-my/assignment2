@@ -309,7 +309,7 @@ piUpdate = function(gamma){
   return(pi)
 }
 
-### Log-likelihood 
+### A function for log-likelihood 
 loglik = function(x, pi, mu, sigma){
   sum_pdf = matrix(0, nrow = length(x))
   loglike = 0
