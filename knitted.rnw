@@ -12,7 +12,7 @@
 
 \pagebreak
 
-
+\section{Least squares variance simulation}
 <<>>=
 library(StatProg)
 library(tidyverse)
@@ -30,7 +30,7 @@ olsFun <- function(data){
   return(beta_ols)
 }
 
-#Här är en kommentar om OLS. blabla bla blabakljdgklajkl
+#HÃ¤r Ã¤r en kommentar om OLS. blabla bla blabakljdgklajkl
 
 testData <- cbind( c(0.62, 0.18, 3.92, 0.80, -5.15),
 c(0.44, 1.49, 0.69, 0.13, 1.90) )
@@ -118,8 +118,6 @@ fwlsFun(data = testData, trueVar = FALSE)
 @
 
 
-First we created the OLS fun to...
-
 <<>>=
 #### Data simulation
 DataFun <- function(n, lambda) {
@@ -158,6 +156,8 @@ DataFun <- function(n, lambda) {
 
 Data generation...
 
+The DataFun funktion generates random data with an error term dependent on the covariance strukture \lambda and the number of observations chosen. The funktion starts by generating the standard deviation of epsilon since the error term is dependent on x, which comes from a uniform distrubtion. When all the parameters are calculated the funktion calculates y and then all the different values of y and x are saved in a matrix and that matrix is set to be the return value.
+
 
 <<>>=
 SimFun <- function(n, sim_reps, seed, lambda) {
@@ -181,6 +181,8 @@ SimFun <- function(n, sim_reps, seed, lambda) {
     return(betas)
 }
 @
+
+The funktion SimFun uses all the pre-existing funktions to generate data and fit models depending on the number of simulationsone wants to perform. The funktion then returns all the fitted betas from all of the models. Except from number of simulation one can also freely choose the number of observations for the data aswell, the seed number and the value of \lambda. 
 
 <<>>=
 ##### 4. Plot variance estimates
@@ -207,17 +209,18 @@ ggplot(as.data.frame(var_obs),aes(x=as.numeric(rownames(var_obs)))) +
   labs(x="Number of obsvervations",y="Variance",
        title="Variance estimates of beta for each function vs sample size") +
   theme(legend.title = element_blank()) +
-  scale_x_continuous(breaks=c(0,25,50,100,200,400),limits=c(0, 400))
+  scale_x_continuous(breaks=c(25,50,100,200,400),limits=c(25, 400))
 
 #############
 @
 
+\section{EM algorithm for mixture of normals}
 
 <<>>=
 ##################################################
 # start of part2
 ##################################################
-galaxies <- as.data.frame(galaxies)
+galaxies <- as.data.frame(galaxies)         
 names(galaxies) <- "km"
 
 ggplot(galaxies, aes(x = km)) +
@@ -225,19 +228,35 @@ ggplot(galaxies, aes(x = km)) +
 
 galaxies = galaxies$km
 
+# Function for gamma update 
 gammaUpdate = function(x, mu, sigma, pi){
-  pdf = t(sapply(x, dnorm, mean = mu, sd = sigma))
+  pdf = t(sapply(x, dnorm, mean = mu, sd = sigma))    
+  # pdf is assigned the value of the pdf of the normal distribution, 
+  # with mean=mu and standard deviation=sigma evaluated at each x
+  # this creates a n*K matrix where n = #observations in data and 
+  # K = #components in the mixture
+
+  # we create a for loop that for each row...  
   for(n in 1:length(x)){
+    # goes through every component 
     for(k in 1:length(mu)){
-      pdf[n, k] = pi[k]*pdf[n, k]
+      # each value of pdf is multiplied by pi  
+      pdf[n, k] = pi[k]*pdf[n, k]      
     }
   }
+  # an empty matrix created 
   gamma = as.data.frame(matrix(NA, ncol = length(pi), nrow = length(x)))
+  
+  # we create a loop that for each row...
   for(n in 1:length(x)){
+    # goes through every component 
     for(k in 1:length(mu)){
+      # gamma[n,k] is assigned the value of pdf[n,k] divided by 
+      # the sum of all values on the same row
       gamma[n, k] = pdf[n, k]/sum(pdf[n,])
     }
   }
+  # This creates a n*K matrix filled with the gamma-values for each x
   return(as.data.frame(gamma))
 }
 
@@ -250,6 +269,7 @@ muUpdate = function(x, gamma){
   }
   return(mu)
 }
+
 
 ### Sigma
 sigmaUpdate = function(x, gamma, mu){
