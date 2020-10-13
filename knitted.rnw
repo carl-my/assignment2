@@ -15,7 +15,7 @@
 
 <<>>=
 library(StatProg)
-library(ggplot2)
+library(tidyverse)
 
 #### OLS
 olsFun <- function(data){
@@ -205,7 +205,6 @@ ggplot(as.data.frame(var_obs),aes(x=as.numeric(rownames(var_obs)))) +
 @
 
 
-
 <<>>=
 ##################################################
 # start of part2
@@ -370,3 +369,4 @@ ggplot(data = final_plot, aes(x = galaxies)) +
 
 @
 
+\end{document}
