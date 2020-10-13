@@ -19,9 +19,11 @@ library(tidyverse)
 
 #### OLS
 olsFun <- function(data){
+  ### create variable for the number of observations in the dataset
+  N <- nrow(data)
+  
   ### set column names and add intercept column to X
   Y <- data[,1]
-  N <- nrow(data)
   X <- cbind(rep(1, N), data[,2])
   
   ### calculate the formel and extract the Beta coefficient 
@@ -37,6 +39,8 @@ c(0.44, 1.49, 0.69, 0.13, 1.90) )
 
 olsFun(data = testData)
 @
+
+To estimate the beta for the OLS regression we set column one of the dataset to Y and column two to X. Adding an extra intercept column of N rows to X. Lastly we calculate beta by using the formel and extract the value for beta coefficient.
 
 <<>>=
 ##### weighted least squares
@@ -69,6 +73,11 @@ wlsFun <- function(data, lambda){
 
 wlsFun(data = testData, lambda = 2)
 @
+
+To estimate beta for the weighted least squares estimator column one of the dataset has been set to Y 
+and column two to X. Then an extra intercept column of N rows has been added to X. To be able to get
+the error covariance matrix we added a zero matrix of size N x N. Then using the zero matrix in a forloop
+and taking the exponent of x times lambda on the diagonal. 
 
 <<>>=
 #### FWLS
@@ -203,10 +212,14 @@ ggplot(as.data.frame(var_obs),aes(x=as.numeric(rownames(var_obs)))) +
   labs(x="Number of obsvervations",y="Variance",
        title="Variance estimates of beta for each function vs sample size") +
   theme(legend.title = element_blank()) +
+  theme(panel.grid.minor = element_blank()) +
   scale_x_continuous(breaks=c(25,50,100,200,400),limits=c(25, 400))
 
 #############
 @
+
+In figure 1 the variance estimates for each beta coefficient for different sample sizes is presented. We can see that the variance decrease for all functions 
+decreases the larger the sample size is. 
 
 
 <<>>=
