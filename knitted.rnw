@@ -374,11 +374,20 @@ EM = function(x, K, tol = 0.001){
 }
 
 set.seed(1996)
-final_plot = matrix(0, ncol = 4, nrow= length(galaxies))
-loglik_values = NULL
+
+final_plot = matrix(0, ncol = 4, nrow= length(galaxies))    # an empty matrix is created 
+loglik_values = NULL      # loglik_values is made sure to be empty
+
+# a for loop that goes through the different values of k, from 2 to 5
 for(k in 2:5){
+  # for each value of k, the EM-functions generates a new z
   z = EM(galaxies, k)
+  
+  # loglik_values is assigned the value of the log-likelihood of the function
   loglik_values[(k-1)] = z$loglik
+  
+  # a for loop that repeats k times and sum the value of the pdf of the normal distribution, 
+  # with mean=mu[i] and standard deviation=sigma[i] evaluated at x, multiplied by pi[k].
   for(i in 1:k){
     final_plot[,(k-1)] = final_plot[,(k-1)] + z$prob[i] * dnorm(galaxies, z$mu[i], z$sigma[i])
   }
