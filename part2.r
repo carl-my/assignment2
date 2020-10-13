@@ -66,7 +66,6 @@ loglik = function(x, pi, mu, sigma){
     for(k in 1:length(pi)){
       sum_pdf[n] = sum_pdf[n] + (pi[k] * dnorm(x[n], mu[k], sigma[k]))
     }
-    
     loglike = loglike + log(sum_pdf[n])
   }
   return(loglike)
@@ -98,7 +97,6 @@ initialValues = function(x, K, reps = 100){
 # EM algo
 ##################################################
 EM = function(x, K, tol = 0.001){
-  
   inits = initialValues(x, K, 1000)
   mu = inits$mu
   sigma = inits$sigma
@@ -124,9 +122,21 @@ EM = function(x, K, tol = 0.001){
   }
   return(list('loglik' = currentLogLik, 'mu' = mu, 'sigma' = sigma, 'prob' = prob))
 }
+<<<<<<< HEAD
 set.seed(1996)
 final_plot = matrix(0, ncol = 4, nrow= length(galaxies))
 loglik_values = NULL
+=======
+
+# se hur loglikelihood förändras för varje iteration
+z = EM(galaxies, 5)
+
+#################################################
+## H�R �R MITT F�RSLAG P� HUR VI KAN G�RA
+#################################################
+
+test = matrix(0, ncol = 4, nrow= length(galaxies))
+>>>>>>> d13a4f25f596aa4a2c53ceef8d828a74d63217f1
 for(k in 2:5){
   z = EM(galaxies, k)
   loglik_values[(k-1)] = z$loglik
@@ -150,5 +160,41 @@ ggplot(data = final_plot, aes(x = galaxies)) +
         legend.justification = c("right", "top"),
         legend.box.just = "right",
         legend.margin = margin(6, 6, 6, 6))
+
+inits = initialValues(x, K, 1000)
+mu = inits$mu
+sigma = inits$sigma
+prob = inits$p
+
+i <- 1
+logliktest <- 0
+
+prevLoglik <- 0
+loglikDiff<- 0
+# while loop
+while(loglikDiff > tol){
+
+gamma <- gammaUpdate(x, mu, sigma, pi)
+mu <- muUpdate(x, gamma)
+sigma <- sigmaUpdate(x, gamma, mu)
+pi <- piUpdate(gamma)
+
+currentLogLik <- loglik(x, probs, mu, sigma)
+
+loglikDiff <- abs(prevLoglik - currentLogLik)
+
+prevLoglik <- currentLogLik 
+
+logliktest[i]  <- currentLogLik
+i = i + 1
+
+}
+
+return(list('loglik' = currentLogLik, 'loglikt' = logliktest, 'mu' = mu, 'sigma' = sigma, 'prob' = prob))
+}
+
+# se hur loglikelihood förändras för varje iteration
+EM(galaxies, 3)
+
 
 
