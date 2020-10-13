@@ -129,24 +129,31 @@ EM = function(x, K, tol = 0.001){
 # se hur loglikelihood fÃ¶rÃ¤ndras fÃ¶r varje iteration
 z = EM(galaxies, 5)
 
-#################################################
-## HÄR ÄR MITT FÖRSLAG PÅ HUR VI KAN GÖRA
-#################################################
-
-test = matrix(0, ncol = 4, nrow= length(galaxies))
+set.seed(2020)
+final_plot = matrix(0, ncol = 4, nrow= length(galaxies))
 for(k in 2:5){
   z = EM(galaxies, k)
+  print(z$loglik)
   temp = 0
   for(i in 1:k){
-    test[,(k-1)] = test[,(k-1)] + z$prob[i] * dnorm(galaxies, z$mu[i], z$sigma[i])
+    final_plot[,(k-1)] = final_plot[,(k-1)] + z$prob[i] * dnorm(galaxies, z$mu[i], z$sigma[i])
   }
 }
-test = as.data.frame(test)
+final_plot = as.data.frame(final_plot)
+colnames(final_plot) = c("K = 2", "K = 3", "K = 4", "K = 5")
+final_plot = cbind(final_plot, galaxies)
 
-ggplot(data = test) +
-  geom_density(aes(x = V1), color = "white", fill = "red", alpha = 0.2) + 
-  geom_density(aes(x = V2), color = "white",fill = "blue", alpha = 0.2) + 
-  geom_density(aes(x = V3), color = "white",fill = "green", alpha = 0.2) + 
-  geom_density(aes(x = V4), color = "white",fill = "purple", alpha = 0.2) 
+ggplot(data = final_plot, aes(x = galaxies)) +
+  geom_line(aes(y = `K = 2`, color = "K = 2"), size = 1) + 
+  geom_line(aes(y = `K = 3`, color = "K = 3"), size = 1) + 
+  geom_line(aes(y = `K = 4`, color = "K = 4"), size = 1) + 
+  geom_line(aes(y = `K = 5`, color = "K = 5"), size = 1) + 
+  geom_density(aes(color = "Density plot"),  
+               fill = "grey", alpha = 0.5, size = 1) + 
+  labs(x = "km", y = "Density",title="TITLE") +
+  theme(legend.title = element_blank(),legend.position = c(.95, .95),
+        legend.justification = c("right", "top"),
+        legend.box.just = "right",
+        legend.margin = margin(6, 6, 6, 6))
 
 
