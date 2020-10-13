@@ -133,7 +133,6 @@ for(k in 2:5){
     final_plot[,(k-1)] = final_plot[,(k-1)] + z$prob[i] * dnorm(galaxies, z$mu[i], z$sigma[i])
   }
 }
-loglik_values
 
 loglik_values <- as.data.frame(loglik_values) %>%
   mutate("K" = (2:5))
