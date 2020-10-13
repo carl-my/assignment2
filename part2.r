@@ -134,6 +134,14 @@ for(k in 2:5){
   }
 }
 loglik_values
+
+loglik_values <- as.data.frame(loglik_values) %>%
+  mutate("K" = (2:5))
+
+loglik_plot = ggplot(data = loglik_values) +
+  geom_line(aes(x=K, y=loglik_values), color = "blue") +
+  labs(x="Number of components",y= "Log likelihood")
+
 final_plot = as.data.frame(final_plot)
 colnames(final_plot) = c("K = 2", "K = 3", "K = 4", "K = 5")
 final_plot = cbind(final_plot, galaxies)
