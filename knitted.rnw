@@ -30,7 +30,7 @@ olsFun <- function(data){
   return(beta_ols)
 }
 
-#Här är en kommentar om OLS. blabla bla blabakljdgklajkl
+#HÃ¤r Ã¤r en kommentar om OLS. blabla bla blabakljdgklajkl
 
 testData <- cbind( c(0.62, 0.18, 3.92, 0.80, -5.15),
 c(0.44, 1.49, 0.69, 0.13, 1.90) )
@@ -72,6 +72,7 @@ wlsFun(data = testData, lambda = 2)
 
 \subsubsection*{Feasible weighted least squares}
 <<>>=
+
 fwlsFun <- function(data, trueVar){
   y = data[,1]                             # y is given the value of the first column in the data  
   N <- nrow(data)                          # N is given the value of the number of rows in the data
@@ -158,6 +159,8 @@ DataFun <- function(n, lambda) {
 
 Data generation...
 
+The DataFun funktion generates random data with an error term dependent on the covariance strukture \lambda and the number of observations chosen. The funktion starts by generating the standard deviation of epsilon since the error term is dependent on x, which comes from a uniform distrubtion. When all the parameters are calculated the funktion calculates y and then all the different values of y and x are saved in a matrix and that matrix is set to be the return value.
+
 
 <<>>=
 SimFun <- function(n, sim_reps, seed, lambda) {
@@ -181,6 +184,8 @@ SimFun <- function(n, sim_reps, seed, lambda) {
     return(betas)
 }
 @
+
+The funktion SimFun uses all the pre-existing funktions to generate data and fit models depending on the number of simulationsone wants to perform. The funktion then returns all the fitted betas from all of the models. Except from number of simulation one can also freely choose the number of observations for the data aswell, the seed number and the value of \lambda. 
 
 <<>>=
 ##### 4. Plot variance estimates
@@ -207,7 +212,7 @@ ggplot(as.data.frame(var_obs),aes(x=as.numeric(rownames(var_obs)))) +
   labs(x="Number of obsvervations",y="Variance",
        title="Variance estimates of beta for each function vs sample size") +
   theme(legend.title = element_blank()) +
-  scale_x_continuous(breaks=c(0,25,50,100,200,400),limits=c(0, 400))
+  scale_x_continuous(breaks=c(25,50,100,200,400),limits=c(25, 400))
 
 #############
 @
@@ -250,6 +255,7 @@ muUpdate = function(x, gamma){
   }
   return(mu)
 }
+
 
 ### Sigma
 sigmaUpdate = function(x, gamma, mu){
