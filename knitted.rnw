@@ -15,7 +15,7 @@
 
 <<>>=
 library(StatProg)
-library(ggplot2)
+library(tidyverse)
 
 #### OLS
 olsFun <- function(data){
@@ -30,7 +30,7 @@ olsFun <- function(data){
   return(beta_ols)
 }
 
-#Här är en kommentar om OLS. blabla bla blabakljdgklajkl
+#HÃ¤r Ã¤r en kommentar om OLS. blabla bla blabakljdgklajkl
 
 testData <- cbind( c(0.62, 0.18, 3.92, 0.80, -5.15),
 c(0.44, 1.49, 0.69, 0.13, 1.90) )
@@ -72,7 +72,7 @@ wlsFun(data = testData, lambda = 2)
 
 <<>>=
 #### FWLS
-# H�r g�r jag lite kommentarer 
+# Här gör jag lite kommentarer 
 # Bla bla bla
 fwlsFun <- function(data, trueVar){
   y = data[,1]
@@ -199,11 +199,10 @@ ggplot(as.data.frame(var_obs),aes(x=as.numeric(rownames(var_obs)))) +
   labs(x="Number of obsvervations",y="Variance",
        title="Variance estimates of beta for each function vs sample size") +
   theme(legend.title = element_blank()) +
-  scale_x_continuous(breaks=c(0,25,50,100,200,400),limits=c(0, 400))
+  scale_x_continuous(breaks=c(25,50,100,200,400),limits=c(0, 400))
 
 #############
 @
-
 
 
 <<>>=
@@ -350,6 +349,7 @@ loglik_values <- as.data.frame(loglik_values) %>%
 loglik_plot = ggplot(data = loglik_values) +
   geom_line(aes(x=K, y=loglik_values), color = "blue") +
   labs(x="Number of components",y= "Log likelihood")
+loglik_plot
 
 final_plot = as.data.frame(final_plot)
 colnames(final_plot) = c("K = 2", "K = 3", "K = 4", "K = 5")
@@ -369,3 +369,4 @@ ggplot(data = final_plot, aes(x = galaxies)) +
 
 @
 
+\end{document}
