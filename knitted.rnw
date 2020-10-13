@@ -31,13 +31,6 @@ olsFun <- function(data){
   
   return(beta_ols)
 }
-
-#HÃ¤r Ã¤r en kommentar om OLS. blabla bla blabakljdgklajkl
-
-testData <- cbind( c(0.62, 0.18, 3.92, 0.80, -5.15),
-c(0.44, 1.49, 0.69, 0.13, 1.90) )
-
-olsFun(data = testData)
 @
 
 To estimate the beta for the OLS regression we set column one of the dataset to Y and column two to X. Adding an extra intercept column of N rows to X. Lastly we calculate beta by using the formel and extract the value for beta coefficient.
@@ -70,8 +63,6 @@ wlsFun <- function(data, lambda){
   return(beta_wls)
   }
 }
-
-wlsFun(data = testData, lambda = 2)
 @
 
 To estimate beta for the weighted least squares estimator column one of the dataset has been set to Y 
@@ -124,8 +115,6 @@ beta_fwls = (solve(t(X)%*%solve(error_cov)%*%X)%*%t(X)%*%solve(error_cov)%*%y)[2
 
 return(beta_fwls)
 }
-fwlsFun(data = testData, trueVar = TRUE)
-fwlsFun(data = testData, trueVar = FALSE)
 @
 
 
