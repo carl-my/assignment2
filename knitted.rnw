@@ -70,38 +70,46 @@ wlsFun <- function(data, lambda){
 wlsFun(data = testData, lambda = 2)
 @
 
+\subsubsection*{Feasible weighted least squares}
 <<>>=
-#### FWLS
-# Här gör jag lite kommentarer 
-# Bla bla bla
 fwlsFun <- function(data, trueVar){
-  y = data[,1]
-  N <- nrow(data)
-  X = cbind(rep(1,N), data[,2:ncol(data)])
+  y = data[,1]                             # y is given the value of the first column in the data  
+  N <- nrow(data)                          # N is given the value of the number of rows in the data
+  X = cbind(rep(1,N), data[,2:ncol(data)]) # X is given the value of the remaining columns in the data 
+                                           # and an intercept is added
   
-  mod = lm(y ~ -1 +X)
-  res = mod$residuals
+  mod = lm(y ~ -1 +X)         # We use lm() to estimate a linear regression model, mod, with an intercept 
+  res = mod$residuals         # res is assigned the value of the residuals of mod
   res2 = res^2
   
-  ln_res2 = lm(log(res2) ~  -1 +X)
-  lambda_hat = ln_res2$coefficients[2]
+  ln_res2 = lm(log(res2) ~  -1 +X)        # We use the lm() function to estimate a new model
+                                          # In this model, the dependent variable is ln(res2), 
+                                          # which is explained by X*lambda + v
+  lambda_hat = ln_res2$coefficients[2]    # Thereby, the value of lambda_hat is the value of 
+                                          # the second estimated coefficient, 
+                                          # since the first is the intercept 
   
+  # We check if trueVar is TRUE, if so, we assume the structure of the error variance to be exp(x*lambda)
   if(trueVar == TRUE){
-    error_cov = matrix(0, N, N)
-    for(i in 1:N){
-      error_cov[i,i] <- exp(X[i,2]*lambda_hat)
+    error_cov = matrix(0, N, N)                 # We create an empty square matrix 
+    for(i in 1:N){                              # The loop repeats itself for every row of X
+      error_cov[i,i] <- exp(X[i,2]*lambda_hat)  # We fill the diagonal in the empty square matrix 
+                                                # with the error variance, exp(x*lambda_hat) for each value of x
     }
     
   }
+  # We check if trueVar is TRUE, if not, we assume the structure of the error variance to be 1 + x*lambda
   else if(trueVar == FALSE)
   {
-    error_cov = matrix(0, N, N)
-    for(i in 1:N){
-      error_cov[i,i] <- 1 + X[i,2]*lambda_hat
+    error_cov = matrix(0, N, N)                 # We create an empty square matrix.
+    for(i in 1:N){                              # The loop repeats itself for every row of X.
+      error_cov[i,i] <- 1 + X[i,2]*lambda_hat   # We fill the diagonal in the empty square matrix 
+                                                # with the error variance, 1 + x*lambda_hat, for each value of x
     }
     
   }
 beta_fwls = (solve(t(X)%*%solve(error_cov)%*%X)%*%t(X)%*%solve(error_cov)%*%y)[2,1]
+# beta_fwls is calculated and returned 
 
 return(beta_fwls)
 }
