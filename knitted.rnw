@@ -150,6 +150,8 @@ DataFun <- function(n, lambda) {
 
 Data generation...
 
+The DataFun funktion generates random data with an error term dependent on the covariance strukture \lambda. The error term is generated  
+
 
 <<>>=
 SimFun <- function(n, sim_reps, seed, lambda) {
