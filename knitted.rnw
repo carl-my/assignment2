@@ -71,6 +71,8 @@ wlsFun(data = testData, lambda = 2)
 
 <<>>=
 #### FWLS
+# Här gör jag lite kommentarer 
+# Bla bla bla
 fwlsFun <- function(data, trueVar){
   y = data[,1]
   N <- nrow(data)
