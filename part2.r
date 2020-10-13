@@ -66,7 +66,6 @@ loglik = function(x, pi, mu, sigma){
     for(k in 1:length(pi)){
       sum_pdf[n] = sum_pdf[n] + (pi[k] * dnorm(x[n], mu[k], sigma[k]))
     }
-    
     loglike = loglike + log(sum_pdf[n])
   }
   return(loglike)
@@ -98,7 +97,6 @@ initialValues = function(x, K, reps = 100){
 # EM algo
 ##################################################
 EM = function(x, K, tol = 0.001){
-  
   inits = initialValues(x, K, 1000)
   mu = inits$mu
   sigma = inits$sigma
@@ -130,7 +128,7 @@ EM = function(x, K, tol = 0.001){
 z = EM(galaxies, 5)
 
 #################################################
-## HÄR ÄR MITT FÖRSLAG PÅ HUR VI KAN GÖRA
+## Hï¿½R ï¿½R MITT Fï¿½RSLAG Pï¿½ HUR VI KAN Gï¿½RA
 #################################################
 
 test = matrix(0, ncol = 4, nrow= length(galaxies))
@@ -148,5 +146,41 @@ ggplot(data = test) +
   geom_density(aes(x = V2), color = "white",fill = "blue", alpha = 0.2) + 
   geom_density(aes(x = V3), color = "white",fill = "green", alpha = 0.2) + 
   geom_density(aes(x = V4), color = "white",fill = "purple", alpha = 0.2) 
+
+inits = initialValues(x, K, 1000)
+mu = inits$mu
+sigma = inits$sigma
+prob = inits$p
+
+i <- 1
+logliktest <- 0
+
+prevLoglik <- 0
+loglikDiff<- 0
+# while loop
+while(loglikDiff > tol){
+
+gamma <- gammaUpdate(x, mu, sigma, pi)
+mu <- muUpdate(x, gamma)
+sigma <- sigmaUpdate(x, gamma, mu)
+pi <- piUpdate(gamma)
+
+currentLogLik <- loglik(x, probs, mu, sigma)
+
+loglikDiff <- abs(prevLoglik - currentLogLik)
+
+prevLoglik <- currentLogLik 
+
+logliktest[i]  <- currentLogLik
+i = i + 1
+
+}
+
+return(list('loglik' = currentLogLik, 'loglikt' = logliktest, 'mu' = mu, 'sigma' = sigma, 'prob' = prob))
+}
+
+# se hur loglikelihood fÃ¶rÃ¤ndras fÃ¶r varje iteration
+EM(galaxies, 3)
+
 
 
