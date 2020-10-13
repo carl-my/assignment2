@@ -243,7 +243,7 @@ gammaUpdate = function(x, mu, sigma, pi){
 
   # we create a for loop that for each row...  
   for(n in 1:length(x)){
-    # goes through every component 
+    # ... goes through every component 
     for(k in 1:length(mu)){
       # each value of pdf is multiplied by pi  
       pdf[n, k] = pi[k]*pdf[n, k]      
@@ -254,7 +254,7 @@ gammaUpdate = function(x, mu, sigma, pi){
   
   # we create a loop that for each row...
   for(n in 1:length(x)){
-    # goes through every component 
+    # ... goes through every component 
     for(k in 1:length(mu)){
       # gamma[n,k] is assigned the value of pdf[n,k] divided by 
       # the sum of all values on the same row
@@ -300,15 +300,23 @@ piUpdate = function(gamma){
 
 ### A function for log-likelihood 
 loglik = function(x, pi, mu, sigma){
-  sum_pdf = matrix(0, nrow = length(x))
-  loglike = 0
+  sum_pdf = matrix(0, nrow = length(x))     # A column vector of zeros
+  loglike = 0     # To make sure loglike is 0
+  
+  # A for loop that for each row...
   for(n in 1:length(x)){
-    
+    # ... goes through every component 
     for(k in 1:length(pi)){
       sum_pdf[n] = sum_pdf[n] + (pi[k] * dnorm(x[n], mu[k], sigma[k]))
+      # for this row, n, we add the value of the pdf of the normal distribution, 
+      # with mean=mu[k] and standard deviation=sigma[k] evaluated at x[n], 
+      # multiplied by pi[k], to sum_pdf[n]
     }
+    # we take the log of this sum and add it to loglike 
     loglike = loglike + log(sum_pdf[n])
+    # the loop is then started again 
   }
+  # When the loop is finished, loglike has the value of the log-likelihood 
   return(loglike)
 }
 
@@ -366,11 +374,20 @@ EM = function(x, K, tol = 0.001){
 }
 
 set.seed(1996)
-final_plot = matrix(0, ncol = 4, nrow= length(galaxies))
-loglik_values = NULL
+
+final_plot = matrix(0, ncol = 4, nrow= length(galaxies))    # an empty matrix is created 
+loglik_values = NULL      # loglik_values is made sure to be empty
+
+# a for loop that goes through the different values of k, from 2 to 5
 for(k in 2:5){
+  # for each value of k, the EM-functions generates a new z
   z = EM(galaxies, k)
+  
+  # loglik_values is assigned the value of the log-likelihood of the function
   loglik_values[(k-1)] = z$loglik
+  
+  # a for loop that repeats k times and sum the value of the pdf of the normal distribution, 
+  # with mean=mu[i] and standard deviation=sigma[i] evaluated at x, multiplied by pi[k].
   for(i in 1:k){
     final_plot[,(k-1)] = final_plot[,(k-1)] + z$prob[i] * dnorm(galaxies, z$mu[i], z$sigma[i])
   }
