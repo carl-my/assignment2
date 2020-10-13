@@ -243,7 +243,7 @@ gammaUpdate = function(x, mu, sigma, pi){
 
   # we create a for loop that for each row...  
   for(n in 1:length(x)){
-    # goes through every component 
+    # ... goes through every component 
     for(k in 1:length(mu)){
       # each value of pdf is multiplied by pi  
       pdf[n, k] = pi[k]*pdf[n, k]      
@@ -254,7 +254,7 @@ gammaUpdate = function(x, mu, sigma, pi){
   
   # we create a loop that for each row...
   for(n in 1:length(x)){
-    # goes through every component 
+    # ... goes through every component 
     for(k in 1:length(mu)){
       # gamma[n,k] is assigned the value of pdf[n,k] divided by 
       # the sum of all values on the same row
@@ -300,15 +300,23 @@ piUpdate = function(gamma){
 
 ### A function for log-likelihood 
 loglik = function(x, pi, mu, sigma){
-  sum_pdf = matrix(0, nrow = length(x))
-  loglike = 0
+  sum_pdf = matrix(0, nrow = length(x))     # A column vector of zeros
+  loglike = 0     # To make sure loglike is 0
+  
+  # A for loop that for each row...
   for(n in 1:length(x)){
-    
+    # ... goes through every component 
     for(k in 1:length(pi)){
       sum_pdf[n] = sum_pdf[n] + (pi[k] * dnorm(x[n], mu[k], sigma[k]))
+      # for this row, n, we add the value of the pdf of the normal distribution, 
+      # with mean=mu[k] and standard deviation=sigma[k] evaluated at x[n], 
+      # multiplied by pi[k], to sum_pdf[n]
     }
+    # we take the log of this sum and add it to loglike 
     loglike = loglike + log(sum_pdf[n])
+    # the loop is then started again 
   }
+  # When the loop is finished, loglike has the value of the log-likelihood 
   return(loglike)
 }
 
