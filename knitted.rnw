@@ -72,6 +72,10 @@ wlsFun(data = testData, lambda = 2)
 
 \subsubsection*{Feasible weighted least squares}
 <<>>=
+<<<<<<< HEAD
+=======
+
+>>>>>>> 16efdbcf7d598424d5b902a8b16030406e318e62
 fwlsFun <- function(data, trueVar){
   y = data[,1]                             # y is given the value of the first column in the data  
   N <- nrow(data)                          # N is given the value of the number of rows in the data
