@@ -129,7 +129,6 @@ EM = function(x, K, tol = 0.001){
 # se hur loglikelihood förändras för varje iteration
 z = EM(galaxies, 5)
 
-set.seed(2020)
 final_plot = matrix(0, ncol = 4, nrow= length(galaxies))
 for(k in 2:5){
   z = EM(galaxies, k)
