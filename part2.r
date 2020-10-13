@@ -122,7 +122,6 @@ EM = function(x, K, tol = 0.001){
     prevLoglik <- currentLogLik 
 
   }
-  
   return(list('loglik' = currentLogLik, 'mu' = mu, 'sigma' = sigma, 'prob' = prob))
 }
 set.seed(1996)
@@ -145,8 +144,7 @@ ggplot(data = final_plot, aes(x = galaxies)) +
   geom_line(aes(y = `K = 3`, color = "K = 3"), size = 1) + 
   geom_line(aes(y = `K = 4`, color = "K = 4"), size = 1) + 
   geom_line(aes(y = `K = 5`, color = "K = 5"), size = 1) + 
-  geom_density(aes(color = "Density plot"),  
-               fill = "grey", alpha = 0.5, size = 1) + 
+  geom_density(aes(fill = "Density plot"), color = "white", alpha = 0.5, size = 1) + 
   labs(x = "km", y = "Density",title="TITLE") +
   theme(legend.title = element_blank(),legend.position = c(.95, .95),
         legend.justification = c("right", "top"),
