@@ -125,17 +125,17 @@ EM = function(x, K, tol = 0.001){
   
   return(list('loglik' = currentLogLik, 'mu' = mu, 'sigma' = sigma, 'prob' = prob))
 }
-
-# se hur loglikelihood förändras för varje iteration
-
+set.seed(1996)
 final_plot = matrix(0, ncol = 4, nrow= length(galaxies))
+loglik_values = NULL
 for(k in 2:5){
   z = EM(galaxies, k)
-  print(z$loglik)
+  loglik_values[(k-1)] = z$loglik
   for(i in 1:k){
     final_plot[,(k-1)] = final_plot[,(k-1)] + z$prob[i] * dnorm(galaxies, z$mu[i], z$sigma[i])
   }
 }
+loglik_values
 final_plot = as.data.frame(final_plot)
 colnames(final_plot) = c("K = 2", "K = 3", "K = 4", "K = 5")
 final_plot = cbind(final_plot, galaxies)
