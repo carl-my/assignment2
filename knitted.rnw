@@ -305,7 +305,7 @@ loglik = function(x, pi, mu, sigma){
   
   # A for loop that for each row...
   for(n in 1:length(x)){
-    # ... goes through every component 
+    # ... goes through every cluster 
     for(k in 1:length(pi)){
       sum_pdf[n] = sum_pdf[n] + (pi[k] * dnorm(x[n], mu[k], sigma[k]))
       # for this row, n, we add the value of the pdf of the normal distribution, 
