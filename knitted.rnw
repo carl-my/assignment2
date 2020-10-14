@@ -183,21 +183,24 @@ The funktion SimFun uses all the pre-existing funktions to generate data and fit
 
 <<>>=
 ##### 4. Plot variance estimates
+## create variable for the different values on n
 x <- c(25, 50, 100, 200, 400)
 
+## make zero matrix to use in for loop
 var_obs <- matrix(0, ncol = 4, nrow = 5)
 
 for (i in seq_along(x)) {
     var_obs[i,] <- (SimFun(x[i], 100, 2020, 2))
 }
-
+### pute variance estimates in a data frame
 var_obs = as.data.frame(var_obs)
 rownames(var_obs) = c(25, 50, 100, 200, 400)
 
-
+### add column and row names
 colnames(var_obs) = c("OLS","WLS","FWLST","FWLSF")
 rownames(var_obs) = c("25","50","100","200","400")
 
+### create line plot with sample size on x-axis and variance estimate on y-axis
 ggplot(as.data.frame(var_obs),aes(x=as.numeric(rownames(var_obs)))) +
   geom_line(aes(y = OLS, colour = "OLS")) + 
   geom_line(aes(y = WLS, colour = "WLS")) +
