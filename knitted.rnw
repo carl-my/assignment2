@@ -34,9 +34,6 @@ olsFun <- function(data){
 }
 @
 
-To estimate the beta for the ordinary least squares estimator the dataset is divided to \textbf{y} and \textbf{X}, where \textbf{y} is the dependent variable and \textbf{X} the explanatory variable. Adding an extra intercept column of n rows to \textbf{X}. Lastly a calculation of the ordinary least squares estimator has been done by using the formula:
-$\hat{\beta}_{OLS}=(\textbf{X}’\textbf{X})^{-1}\textbf{X}’\textbf{y}$.
-
 \subsubsection*{Weighted least squares}
 <<>>=
 ##### weighted least squares
@@ -68,8 +65,6 @@ wlsFun <- function(data, lambda){
 }
 @
 
-To estimate the beta for the weighted least squares estimator the dataset is divided to \textbf{y} and \textbf{X}, where \textbf{y} is the dependent variable and \textbf{X} the explanatory variable. Then an extra intercept column of n rows has been added to \textbf{X}. To be able to get the error covariance matrix $\omega$ we added a zero matrix of size n x n. By running a for loop where the exponent of \textbf{X} times $\lambda$ is added on the diagonal in the zero matrix calculates our $\omega$. The value of the weighted least square estimator is then computed by: 
-$\hat{\beta}_{WLS}=(\textbf{X}’\Omega({\lambda})^{-1}\textbf{X})^{-1}\textbf{X}’\Omega({\lambda})^{-1}\textbf{y}$. The function checks that $\lambda$ is numeric, if not it prints “lambda is not numeric”.
 
 
 \subsubsection*{Feasible weighted least squares}
@@ -216,7 +211,7 @@ ggplot(as.data.frame(var_obs),aes(x=as.numeric(rownames(var_obs)))) +
 #############
 @
 \subsection*{Figure 1: Variance estimates of beta for each function for different sample size}
-In figure 1 the variance estimates for each beta coefficient for different sample sizes is presented. We can see that the variance decreases for all beta estimates the larger the sample size is. The feasible least squares estimates the lowest variance both when the variance form is true and false, i.e. is the most efficient estimator. We can say that the FWLS is BLUE. The plot clearly shows that OLS is inefficient, it looks to lack heteroscedasticity since the variance differs much depending on sample size. WLS is better than OLS but still has some bias.
+
 
 =======
 \section{EM algorithm for mixture of normals}
@@ -292,8 +287,11 @@ sigmaUpdate = function(x, gamma, mu){
   return(sigma)
 }
 
+### Pi
 piUpdate = function(gamma){
   pi <- NULL
+  ## a for loop for every cluster that takes the sum of each column gamma
+  ## divided with the sum of gamma
   for (i in 1:ncol(gamma)) {
     pi[i] <- sum(gamma[,i])/sum(gamma)
   }
@@ -395,14 +393,15 @@ for(k in 2:5){
   }
 }
 
-loglik_values <- as.data.frame(loglik_values) %>%
+### Plot log likelihood for different values on K
+loglik_values <- as.data.frame(loglik_values) %>%  ## convert loglik values to data frame and add one column "K"
   mutate("K" = (2:5))
 
-loglik_plot = ggplot(data = loglik_values) +
+### create density plot with number of K:s on x-axis and log likelihood on y-axis
+loglik_plot = ggplot(data = loglik_values) + 
   geom_line(aes(x=K, y=loglik_values), color = "blue") +
   labs(x="Number of components",y= "Log likelihood")
 loglik_plot
-\subsection{Figure 3: Log likelihood for each number of components}
 
 final_plot = as.data.frame(final_plot)
 colnames(final_plot) = c("K = 2", "K = 3", "K = 4", "K = 5")
@@ -422,5 +421,4 @@ ggplot(data = final_plot, aes(x = galaxies)) +
 
 @
 \subsection*{Figure 4: Plot of different values of K and the density plot of galaxies}
-In figure 4 a comparison for different values of K, components, when running the EM algorithm is presented. By looking at the plot it seems like the number of components that fits the data best, according to the original plot in figure **, is 4 but is probably a bit more fitted. When taking the previous plot in consideration, it looks like the number of components that fits the data best is 3.
 \end{document}
