@@ -13,6 +13,7 @@
 \pagebreak
 
 \section{Least squares variance simulation}
+\subsubsection*{Ordinary least squares}
 <<>>=
 library(StatProg)
 library(tidyverse)
@@ -33,8 +34,10 @@ olsFun <- function(data){
 }
 @
 
-To estimate the beta for the OLS regression we set column one of the dataset to Y and column two to X. Adding an extra intercept column of N rows to X. Lastly we calculate beta by using the formel and extract the value for beta coefficient.
+To estimate the beta for the ordinary least squares estimator the dataset is divided to \textbf{y} and \textbf{X}, where \textbf{y} is the dependent variable and \textbf{X} the explanatory variable. Adding an extra intercept column of n rows to \textbf{X}. Lastly a calculation of the ordinary least squares estimator has been done by using the formula:
+$\hat{\beta}_{OLS}=(\textbf{X}’\textbf{X})^{-1}\textbf{X}’\textbf{y}$.
 
+\subsubsection*{Weighted least squares}
 <<>>=
 ##### weighted least squares
 wlsFun <- function(data, lambda){
@@ -65,10 +68,9 @@ wlsFun <- function(data, lambda){
 }
 @
 
-To estimate beta for the weighted least squares estimator column one of the dataset has been set to Y 
-and column two to X. Then an extra intercept column of N rows has been added to X. To be able to get
-the error covariance matrix we added a zero matrix of size N x N. Then using the zero matrix in a forloop
-and taking the exponent of x times lambda on the diagonal. 
+To estimate the beta for the weighted least squares estimator the dataset is divided to \textbf{y} and \textbf{X}, where \textbf{y} is the dependent variable and \textbf{X} the explanatory variable. Then an extra intercept column of n rows has been added to \textbf{X}. To be able to get the error covariance matrix $\omega$ we added a zero matrix of size n x n. By running a for loop where the exponent of \textbf{X} times $\lambda$ is added on the diagonal in the zero matrix calculates our $\omega$. The value of the weighted least square estimator is then computed by: 
+$\hat{\beta}_{WLS}=(\textbf{X}’\Omega({\lambda})^{-1}\textbf{X})^{-1}\textbf{X}’\Omega({\lambda})^{-1}\textbf{y}$. The function checks that $\lambda$ is numeric, if not it prints “lambda is not numeric”.
+
 
 \subsubsection*{Feasible weighted least squares}
 
@@ -206,17 +208,15 @@ ggplot(as.data.frame(var_obs),aes(x=as.numeric(rownames(var_obs)))) +
   geom_line(aes(y = WLS, colour = "WLS")) +
   geom_line(aes(y = FWLST, colour = "FWLST")) + 
   geom_line(aes(y = FWLSF, colour = "FWLSF")) +
-  labs(x="Number of obsvervations",y="Variance",
-       title="Variance estimates of beta for each function vs sample size") +
+  labs(x="Number of obsvervations",y="Variance") +
   theme(legend.title = element_blank()) +
   theme(panel.grid.minor = element_blank()) +
   scale_x_continuous(breaks=c(25,50,100,200,400),limits=c(25, 400))
 
 #############
 @
-
-In figure 1 the variance estimates for each beta coefficient for different sample sizes is presented. We can see that the variance decrease for all functions 
-decreases the larger the sample size is. 
+\subsection*{Figure 1: Variance estimates of beta for each function for different sample size}
+In figure 1 the variance estimates for each beta coefficient for different sample sizes is presented. We can see that the variance decreases for all beta estimates the larger the sample size is. The feasible least squares estimates the lowest variance both when the variance form is true and false, i.e. is the most efficient estimator. We can say that the FWLS is BLUE. The plot clearly shows that OLS is inefficient, it looks to lack heteroscedasticity since the variance differs much depending on sample size. WLS is better than OLS but still has some bias.
 
 =======
 \section{EM algorithm for mixture of normals}
@@ -402,6 +402,7 @@ loglik_plot = ggplot(data = loglik_values) +
   geom_line(aes(x=K, y=loglik_values), color = "blue") +
   labs(x="Number of components",y= "Log likelihood")
 loglik_plot
+\subsection{Figure 3: Log likelihood for each number of components}
 
 final_plot = as.data.frame(final_plot)
 colnames(final_plot) = c("K = 2", "K = 3", "K = 4", "K = 5")
@@ -420,5 +421,6 @@ ggplot(data = final_plot, aes(x = galaxies)) +
         legend.margin = margin(6, 6, 6, 6)) 
 
 @
-
+\subsection*{Figure 4: Plot of different values of K and the density plot of galaxies}
+In figure 4 a comparison for different values of K, components, when running the EM algorithm is presented. By looking at the plot it seems like the number of components that fits the data best, according to the original plot in figure **, is 4 but is probably a bit more fitted. When taking the previous plot in consideration, it looks like the number of components that fits the data best is 3.
 \end{document}
