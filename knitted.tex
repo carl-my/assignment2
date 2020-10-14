@@ -62,436 +62,136 @@
 \pagebreak
 
 \section{Least squares variance simulation}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlkwd{library}\hlstd{(StatProg)}
-\hlkwd{library}\hlstd{(tidyverse)}
-\end{alltt}
+
+In linear regression, given that the Gauss-Markov theorem is satisfied, ordinary least squares is considered (OLS) to be the best linear unbiased estimator. If the assumption of homoscedasticity is violated, then OLS won’t be the estimator with the smallest variance (the most efficient). Instead, to handle heteroscedasticity, one could make use of a weighted least squares estimator (WLS), which can be more efficient than OLS. The weights in WLS can be constructed easily if the variance is known. If the variance is unknown it is still possible to perform WLS but a certain parametric structure needs to be assumed, this method is called feasible weighted least squares (FWLS).
 
 
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# -- Attaching packages ----------------------------------------- tidyverse 1.3.0 --}}
+In the following section a comparison between the three different methods will be carried out. The goal is to see how they differ in terms of efficiency by performing estimation based on simulated data.
 
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# v ggplot2 3.3.2\ \ \ \  v purrr\ \  0.3.4\\\#\# v tibble\ \ 3.0.3\ \ \ \  v dplyr\ \  1.0.2\\\#\# v tidyr\ \  1.1.2\ \ \ \  v stringr 1.4.0\\\#\# v readr\ \  1.3.1\ \ \ \  v forcats 0.5.0}}
 
-{\ttfamily\noindent\itshape\color{messagecolor}{\#\# -- Conflicts -------------------------------------------- tidyverse\_conflicts() --\\\#\# x dplyr::filter() masks stats::filter()\\\#\# x dplyr::lag()\ \ \ \ masks stats::lag()}}\begin{alltt}
-\hlcom{#### OLS}
-\hlstd{olsFun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{data}\hlstd{)\{}
-  \hlcom{### set column names and add intercept column to X}
-  \hlstd{Y} \hlkwb{<-} \hlstd{data[,}\hlnum{1}\hlstd{]}
-  \hlstd{N} \hlkwb{<-} \hlkwd{nrow}\hlstd{(data)}
-  \hlstd{X} \hlkwb{<-} \hlkwd{cbind}\hlstd{(}\hlkwd{rep}\hlstd{(}\hlnum{1}\hlstd{, N), data[,}\hlnum{2}\hlstd{])}
 
-  \hlcom{### calculate the formel and extract the Beta coefficient }
-  \hlstd{beta_ols}\hlkwb{=}\hlstd{(}\hlkwd{solve}\hlstd{(}\hlkwd{t}\hlstd{(X)}\hlopt{%*%} \hlstd{X)} \hlopt{%*%} \hlstd{(}\hlkwd{t}\hlstd{(X)} \hlopt{%*%} \hlstd{Y))[}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{]}
+\subsubsection*{Ordinary least squares}
 
-  \hlkwd{return}\hlstd{(beta_ols)}
-\hlstd{\}}
+To estimate the beta for the ordinary least squares estimator we used the two vector dataset and set column one to \textbf{y} and column two to \textbf{X}, where \textbf{y} is the dependent variable and \textbf{X} the explanatory variable. Adding an extra intercept column of n rows to \textbf{X}. Lastly a calculation of the ordinary least squares estimator has been done by using the formula:
+$\hat{\beta}_{OLS}=(\textbf{X}’\textbf{X})^{-1}\textbf{X}’\textbf{y}$.
 
-\hlcom{#HÃ¤r Ã¤r en kommentar om OLS. blabla bla blabakljdgklajkl}
 
-\hlstd{testData} \hlkwb{<-} \hlkwd{cbind}\hlstd{(} \hlkwd{c}\hlstd{(}\hlnum{0.62}\hlstd{,} \hlnum{0.18}\hlstd{,} \hlnum{3.92}\hlstd{,} \hlnum{0.80}\hlstd{,} \hlopt{-}\hlnum{5.15}\hlstd{),}
-\hlkwd{c}\hlstd{(}\hlnum{0.44}\hlstd{,} \hlnum{1.49}\hlstd{,} \hlnum{0.69}\hlstd{,} \hlnum{0.13}\hlstd{,} \hlnum{1.90}\hlstd{) )}
 
-\hlkwd{olsFun}\hlstd{(}\hlkwc{data} \hlstd{= testData)}
-\end{alltt}
-\begin{verbatim}
-## [1] -3.092464
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+\subsubsection*{Weighted least squares}
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{##### weighted least squares}
-\hlstd{wlsFun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{data}\hlstd{,} \hlkwc{lambda}\hlstd{)\{}
-  \hlkwa{if} \hlstd{(}\hlkwd{is.numeric}\hlstd{(lambda)}\hlopt{==}\hlnum{FALSE}\hlstd{)\{}\hlkwd{print}\hlstd{(}\hlstr{"lambda is not numeric"}\hlstd{) \}}
-  \hlkwa{else}\hlstd{\{}
-    \hlcom{### create variable for the number of observations in the dataset}
-    \hlstd{N} \hlkwb{<-} \hlkwd{nrow}\hlstd{(data)}
+To estimate the beta for the weighted least squares estimator we used the two vector dataset and set column one to \textbf{y} and column two to \textbf{X}, where \textbf{y} is the dependent variable and \textbf{X} the explanatory variable. Then an extra intercept column of n rows has been added to \textbf{X}. To be able to get the error covariance matrix $\omega$ we added a zero matrix of size n x n. By running a for loop where the exponent of \textbf{X} times $\lambda$ is added on the diagonal in the zero matrix calculates our $\omega$. The value of the weighted least square estimator is then computed by: 
+$\hat{\beta}_{WLS}=(\textbf{X}’\Omega({\lambda})^{-1}\textbf{X})^{-1}\textbf{X}’\Omega({\lambda})^{-1}\textbf{y}$.
 
-    \hlcom{### set column names and add intercept column for X}
-    \hlstd{Y} \hlkwb{<-} \hlstd{data[,}\hlnum{1}\hlstd{]}
-    \hlstd{X} \hlkwb{<-} \hlkwd{cbind}\hlstd{(}\hlkwd{rep}\hlstd{(}\hlnum{1}\hlstd{,N), data[,}\hlnum{2}\hlstd{])}
 
-    \hlcom{### create a zero matrix N x N}
-    \hlstd{Z} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlnum{0}\hlstd{, N, N)}
 
-    \hlcom{## make a forloop to put in the error terms on the diagonal }
-    \hlcom{## to create the error covariance matrix}
-    \hlstd{er} \hlkwb{<-} \hlkwa{NULL}
-    \hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlstd{N) \{}
-      \hlstd{er[i]} \hlkwb{<-} \hlkwd{exp}\hlstd{(X[i,}\hlnum{2}\hlstd{]}\hlopt{*}\hlstd{lambda)}
-      \hlstd{Z[i,i]} \hlkwb{<-} \hlstd{er[i]}
-    \hlstd{\}}
-    \hlcom{### calculate and extract the Beta coefficient}
-    \hlstd{beta_wls} \hlkwb{=} \hlstd{((}\hlkwd{solve}\hlstd{(}\hlkwd{t}\hlstd{(X)}\hlopt{%*%}\hlstd{(}\hlkwd{solve}\hlstd{(Z))}\hlopt{%*%}\hlstd{X)}\hlopt{%*%}\hlkwd{t}\hlstd{(X)}\hlopt{%*%}
-                   \hlstd{(}\hlkwd{solve}\hlstd{(Z))}\hlopt{%*%}\hlstd{Y))[}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{]}
-  \hlkwd{return}\hlstd{(beta_wls)}
-  \hlstd{\}}
-\hlstd{\}}
-
-\hlkwd{wlsFun}\hlstd{(}\hlkwc{data} \hlstd{= testData,} \hlkwc{lambda} \hlstd{=} \hlnum{2}\hlstd{)}
-\end{alltt}
-\begin{verbatim}
-## [1] 0.007392226
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
-
-\subsubsection*{Feasible weighted least squares}
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{fwlsFun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{data}\hlstd{,} \hlkwc{trueVar}\hlstd{)\{}
-  \hlstd{y} \hlkwb{=} \hlstd{data[,}\hlnum{1}\hlstd{]}                             \hlcom{# y is given the value of the first column in the data  }
-  \hlstd{N} \hlkwb{<-} \hlkwd{nrow}\hlstd{(data)}                          \hlcom{# N is given the value of the number of rows in the data}
-  \hlstd{X} \hlkwb{=} \hlkwd{cbind}\hlstd{(}\hlkwd{rep}\hlstd{(}\hlnum{1}\hlstd{,N), data[,}\hlnum{2}\hlopt{:}\hlkwd{ncol}\hlstd{(data)])} \hlcom{# X is given the value of the remaining columns in the data }
-                                           \hlcom{# and an intercept is added}
-
-  \hlstd{mod} \hlkwb{=} \hlkwd{lm}\hlstd{(y} \hlopt{~ -}\hlnum{1} \hlopt{+}\hlstd{X)}         \hlcom{# We use lm() to estimate a linear regression model, mod, with an intercept }
-  \hlstd{res} \hlkwb{=} \hlstd{mod}\hlopt{$}\hlstd{residuals}         \hlcom{# res is assigned the value of the residuals of mod}
-  \hlstd{res2} \hlkwb{=} \hlstd{res}\hlopt{^}\hlnum{2}
-
-  \hlstd{ln_res2} \hlkwb{=} \hlkwd{lm}\hlstd{(}\hlkwd{log}\hlstd{(res2)} \hlopt{~  -}\hlnum{1} \hlopt{+}\hlstd{X)}        \hlcom{# We use the lm() function to estimate a new model}
-                                          \hlcom{# In this model, the dependent variable is ln(res2), }
-                                          \hlcom{# which is explained by X*lambda + v}
-  \hlstd{lambda_hat} \hlkwb{=} \hlstd{ln_res2}\hlopt{$}\hlstd{coefficients[}\hlnum{2}\hlstd{]}    \hlcom{# Thereby, the value of lambda_hat is the value of }
-                                          \hlcom{# the second estimated coefficient, }
-                                          \hlcom{# since the first is the intercept }
-
-  \hlcom{# We check if trueVar is TRUE, if so, we assume the structure of the error variance to be exp(x*lambda)}
-  \hlkwa{if}\hlstd{(trueVar} \hlopt{==} \hlnum{TRUE}\hlstd{)\{}
-    \hlstd{error_cov} \hlkwb{=} \hlkwd{matrix}\hlstd{(}\hlnum{0}\hlstd{, N, N)}                 \hlcom{# We create an empty square matrix }
-    \hlkwa{for}\hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlstd{N)\{}                              \hlcom{# The loop repeats itself for every row of X}
-      \hlstd{error_cov[i,i]} \hlkwb{<-} \hlkwd{exp}\hlstd{(X[i,}\hlnum{2}\hlstd{]}\hlopt{*}\hlstd{lambda_hat)}  \hlcom{# We fill the diagonal in the empty square matrix }
-                                                \hlcom{# with the error variance, exp(x*lambda_hat) for each value of x}
-    \hlstd{\}}
-
-  \hlstd{\}}
-  \hlcom{# We check if trueVar is TRUE, if not, we assume the structure of the error variance to be 1 + x*lambda}
-  \hlkwa{else if}\hlstd{(trueVar} \hlopt{==} \hlnum{FALSE}\hlstd{)}
-  \hlstd{\{}
-    \hlstd{error_cov} \hlkwb{=} \hlkwd{matrix}\hlstd{(}\hlnum{0}\hlstd{, N, N)}                 \hlcom{# We create an empty square matrix.}
-    \hlkwa{for}\hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlstd{N)\{}                              \hlcom{# The loop repeats itself for every row of X.}
-      \hlstd{error_cov[i,i]} \hlkwb{<-} \hlnum{1} \hlopt{+} \hlstd{X[i,}\hlnum{2}\hlstd{]}\hlopt{*}\hlstd{lambda_hat}   \hlcom{# We fill the diagonal in the empty square matrix }
-                                                \hlcom{# with the error variance, 1 + x*lambda_hat, for each value of x}
-    \hlstd{\}}
-
-  \hlstd{\}}
-\hlstd{beta_fwls} \hlkwb{=} \hlstd{(}\hlkwd{solve}\hlstd{(}\hlkwd{t}\hlstd{(X)}\hlopt{%*%}\hlkwd{solve}\hlstd{(error_cov)}\hlopt{%*%}\hlstd{X)}\hlopt{%*%}\hlkwd{t}\hlstd{(X)}\hlopt{%*%}\hlkwd{solve}\hlstd{(error_cov)}\hlopt{%*%}\hlstd{y)[}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{]}
-\hlcom{# beta_fwls is calculated and returned }
-
-\hlkwd{return}\hlstd{(beta_fwls)}
-\hlstd{\}}
-\hlkwd{fwlsFun}\hlstd{(}\hlkwc{data} \hlstd{= testData,} \hlkwc{trueVar} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-\end{alltt}
-\begin{verbatim}
-## [1] -2.615266
-\end{verbatim}
-\begin{alltt}
-\hlkwd{fwlsFun}\hlstd{(}\hlkwc{data} \hlstd{= testData,} \hlkwc{trueVar} \hlstd{=} \hlnum{FALSE}\hlstd{)}
-\end{alltt}
-\begin{verbatim}
-## [1] -2.750474
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
 
 \subsubsection*{Feasible weighted least squares}
 
-To estimate beta for the feasible weighted least squares estimator we needed to assume some structure for the error variance depending on whether the variance form is true ($\sigma^2_{\epsilon_i} = e^{x_i\lambda}$) or false ($\sigma^2_{\epsilon_i} = 1 + x_i\lambda$). The data is divided into y and X, y being the dependent variable, X being the explanatory variable. A linear regression model of y and X is estimated and the residuals from this model are used to estimate another linear regression model. In this model, the dependent variable is the natural logarithm of the squared residuals and the independent variable is X. The coefficient of this linear model is the estimated value of $\lambda$, that is, $\hat{\lambda}$. This value of $\hat{\lambda}$ is then used to get an estimate of the error covariance matrix $\Omega(\hat{\lambda})$, where the diagonal is filled with the value of the estimated error variance for each value of x, $\hat{\sigma}^2_{\epsilon_i}$, which differs depending on whether the variance form is assumed to be true of false. 
-The value of the feasible weighted least squares estimator is then computed by:$\hat{\beta}_{FWLS}=(\textbf{X}'\Omega(\hat{\lambda})^{-1}\textbf{X})^{-1}\textbf{X}'\Omega(\hat{\lambda})^{-1}\textbf{y}$.
+To estimate beta for the feasible weighted least squares estimator we needed to assume some structure for the error variance depending on whether the variance form is true ($\sigma^2_{\epsilon_i} = e^{x_i\lambda}$) or false ($\sigma^2_{\epsilon_i} = 1 + x_i\lambda$). The data is divided into \textbf{y} and \textbf{X}, \textbf{y} being the dependent variable, \textbf{X} being the explanatory variable. A linear regression model of \textbf{y} and \textbf{X} is estimated and the residuals from this model are used to estimate another linear regression model. In this model, the dependent variable is the natural logarithm of the squared residuals and the independent variable is \textbf{X}. The coefficient of this linear model is the estimated value of $\lambda$, that is, $\hat{\lambda}$. This value of $\hat{\lambda}$ is then used to get an estimate of the error covariance matrix $\Omega(\hat{\lambda})$, where the diagonal is filled with the value of the estimated error variance for each value of x, $\hat{\sigma}^2_{\epsilon_i}$, which differs depending on whether the variance form is assumed to be true of false. 
+The value of the feasible weighted least squares estimator is then computed by: $\hat{\beta}_{FWLS}=(\textbf{X}’\Omega(\hat{\lambda})^{-1}\textbf{X})^{-1}\textbf{X}’\Omega(\hat{\lambda})^{-1}\textbf{y}$.
 
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{#### Data simulation}
-\hlstd{DataFun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{n}\hlstd{,} \hlkwc{lambda}\hlstd{) \{}
 
-    \hlcom{# independent variable}
-    \hlstd{x} \hlkwb{<-} \hlkwd{runif}\hlstd{(n,} \hlkwc{min} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{max} \hlstd{=} \hlnum{2}\hlstd{)}
 
-    \hlcom{# standard deviation in epsilons normal distribution}
-    \hlstd{s} \hlkwb{<-} \hlkwa{NULL}
-    \hlkwa{for} \hlstd{(i} \hlkwa{in} \hlkwd{seq_len}\hlstd{(n)) \{}
-        \hlstd{s[i]} \hlkwb{<-} \hlkwd{exp}\hlstd{(x[i]}\hlopt{*}\hlstd{lambda)}
-    \hlstd{\}}
+\subsubsection*{Data}
 
-    \hlcom{# error term}
-    \hlstd{epsilon} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(n,} \hlkwc{mean} \hlstd{=} \hlkwd{rep}\hlstd{(}\hlnum{0}\hlstd{, n),} \hlkwc{sd} \hlstd{= s)}
+To generate data the DataFun function was generated. It generates random data with an error term dependent on the covariance structure $   \lambda $ and the number of observations chosen. The function starts by generating the standard deviation of epsilon since the error term is dependent on x, which comes from a uniform distribution. When all the parameters are calculated the function calculates y and then all the different values of y and x are saved in a matrix and that matrix is set to be the return value.
 
-    \hlstd{beta} \hlkwb{<-} \hlnum{2}
 
-    \hlcom{# dependent variable}
-    \hlstd{y} \hlkwb{<-} \hlkwa{NULL}
-    \hlkwa{for} \hlstd{(i} \hlkwa{in} \hlkwd{seq_len}\hlstd{(n)) \{}
-        \hlstd{y[i]} \hlkwb{<-} \hlstd{beta}\hlopt{*}\hlstd{x[i]} \hlopt{+} \hlstd{epsilon[i]}
-    \hlstd{\}}
 
-    \hlcom{# container matrix}
-    \hlstd{mat} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlkwc{data} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{ncol} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{nrow} \hlstd{= n)}
+\subsubsection*{Simulation}
 
-    \hlcom{# creating matrix of indepedent and dependent variables}
-    \hlkwa{for} \hlstd{(i} \hlkwa{in} \hlkwd{seq_len}\hlstd{(n)) \{}
-        \hlstd{mat[i,} \hlnum{1}\hlstd{]} \hlkwb{<-} \hlstd{y[i]}
-        \hlstd{mat[i,} \hlnum{2}\hlstd{]} \hlkwb{<-} \hlstd{x[i]}
-    \hlstd{\}}
-    \hlkwd{return}\hlstd{(mat)}
-\hlstd{\}}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-Data generation...
-
-The DataFun funktion generates random data with an error term dependent on the covariance strukture \lambda and the number of observations chosen. The funktion starts by generating the standard deviation of epsilon since the error term is dependent on x, which comes from a uniform distrubtion. When all the parameters are calculated the funktion calculates y and then all the different values of y and x are saved in a matrix and that matrix is set to be the return value.
-
+The function SimFun uses all the pre-existing functions to generate data and fit models depending on the number of simulations one wants to perform. The function then returns all the fitted betas from all of the models. Except the number of simulations one can also freely choose the number of observations for the data as well, the seed number and the value of $\lambda$ .
 
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlstd{SimFun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{n}\hlstd{,} \hlkwc{sim_reps}\hlstd{,} \hlkwc{seed}\hlstd{,} \hlkwc{lambda}\hlstd{) \{}
-    \hlkwd{set.seed}\hlstd{(seed)}
-    \hlstd{R} \hlkwb{<-} \hlstd{sim_reps}
-
-    \hlcom{# saving betas}
-    \hlstd{mat} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlnum{0}\hlstd{,} \hlkwc{nrow} \hlstd{= R,} \hlkwc{ncol} \hlstd{=} \hlnum{4}\hlstd{)}
-
-    \hlkwa{for} \hlstd{(i} \hlkwa{in} \hlkwd{seq_len}\hlstd{(R)) \{}
-    \hlcom{# data sim}
-    \hlstd{dat} \hlkwb{<-} \hlkwd{DataFun}\hlstd{(n, lambda)}
-    \hlcom{# estimate sim}
-    \hlstd{mat[i,}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlkwd{olsFun}\hlstd{(dat)}
-    \hlstd{mat[i,}\hlnum{2}\hlstd{]} \hlkwb{<-} \hlkwd{wlsFun}\hlstd{(dat, lambda)}
-    \hlstd{mat[i,}\hlnum{4}\hlstd{]}\hlkwb{<-} \hlkwd{fwlsFun}\hlstd{(dat,} \hlkwc{trueVar} \hlstd{=} \hlnum{TRUE}\hlstd{)}
-    \hlstd{mat[i,}\hlnum{3}\hlstd{]}\hlkwb{<-} \hlkwd{fwlsFun}\hlstd{(dat,} \hlkwc{trueVar} \hlstd{=} \hlnum{FALSE}\hlstd{)}
-    \hlstd{\}}
-    \hlstd{betas} \hlkwb{<-} \hlkwd{apply}\hlstd{(mat,} \hlnum{2}\hlstd{, var)}
-
-    \hlkwd{return}\hlstd{(betas)}
-\hlstd{\}}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
-
-The funktion SimFun uses all the pre-existing funktions to generate data and fit models depending on the number of simulationsone wants to perform. The funktion then returns all the fitted betas from all of the models. Except from number of simulation one can also freely choose the number of observations for the data aswell, the seed number and the value of \lambda. 
-
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{##### 4. Plot variance estimates}
-\hlstd{x} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{25}\hlstd{,} \hlnum{50}\hlstd{,} \hlnum{100}\hlstd{,} \hlnum{200}\hlstd{,} \hlnum{400}\hlstd{)}
-
-\hlstd{var_obs} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlnum{0}\hlstd{,} \hlkwc{ncol} \hlstd{=} \hlnum{4}\hlstd{,} \hlkwc{nrow} \hlstd{=} \hlnum{5}\hlstd{)}
-
-\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlkwd{seq_along}\hlstd{(x)) \{}
-    \hlstd{var_obs[i,]} \hlkwb{<-} \hlstd{(}\hlkwd{SimFun}\hlstd{(x[i],} \hlnum{100}\hlstd{,} \hlnum{2020}\hlstd{,} \hlnum{2}\hlstd{))}
-\hlstd{\}}
-
-\hlstd{var_obs} \hlkwb{=} \hlkwd{as.data.frame}\hlstd{(var_obs)}
-\hlkwd{rownames}\hlstd{(var_obs)} \hlkwb{=} \hlkwd{c}\hlstd{(}\hlnum{25}\hlstd{,} \hlnum{50}\hlstd{,} \hlnum{100}\hlstd{,} \hlnum{200}\hlstd{,} \hlnum{400}\hlstd{)}
-
-
-\hlkwd{colnames}\hlstd{(var_obs)} \hlkwb{=} \hlkwd{c}\hlstd{(}\hlstr{"OLS"}\hlstd{,}\hlstr{"WLS"}\hlstd{,}\hlstr{"FWLST"}\hlstd{,}\hlstr{"FWLSF"}\hlstd{)}
-\hlkwd{rownames}\hlstd{(var_obs)} \hlkwb{=} \hlkwd{c}\hlstd{(}\hlstr{"25"}\hlstd{,}\hlstr{"50"}\hlstd{,}\hlstr{"100"}\hlstd{,}\hlstr{"200"}\hlstd{,}\hlstr{"400"}\hlstd{)}
-
-\hlkwd{ggplot}\hlstd{(}\hlkwd{as.data.frame}\hlstd{(var_obs),}\hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=}\hlkwd{as.numeric}\hlstd{(}\hlkwd{rownames}\hlstd{(var_obs))))} \hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwd{aes}\hlstd{(}\hlkwc{y} \hlstd{= OLS,} \hlkwc{colour} \hlstd{=} \hlstr{"OLS"}\hlstd{))} \hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwd{aes}\hlstd{(}\hlkwc{y} \hlstd{= WLS,} \hlkwc{colour} \hlstd{=} \hlstr{"WLS"}\hlstd{))} \hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwd{aes}\hlstd{(}\hlkwc{y} \hlstd{= FWLST,} \hlkwc{colour} \hlstd{=} \hlstr{"FWLST"}\hlstd{))} \hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwd{aes}\hlstd{(}\hlkwc{y} \hlstd{= FWLSF,} \hlkwc{colour} \hlstd{=} \hlstr{"FWLSF"}\hlstd{))} \hlopt{+}
-  \hlkwd{labs}\hlstd{(}\hlkwc{x}\hlstd{=}\hlstr{"Number of obsvervations"}\hlstd{,}\hlkwc{y}\hlstd{=}\hlstr{"Variance"}\hlstd{,}
-       \hlkwc{title}\hlstd{=}\hlstr{"Variance estimates of beta for each function vs sample size"}\hlstd{)} \hlopt{+}
-  \hlkwd{theme}\hlstd{(}\hlkwc{legend.title} \hlstd{=} \hlkwd{element_blank}\hlstd{())} \hlopt{+}
-  \hlkwd{scale_x_continuous}\hlstd{(}\hlkwc{breaks}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{25}\hlstd{,}\hlnum{50}\hlstd{,}\hlnum{100}\hlstd{,}\hlnum{200}\hlstd{,}\hlnum{400}\hlstd{),}\hlkwc{limits}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{25}\hlstd{,} \hlnum{400}\hlstd{))}
-\end{alltt}
-\end{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-6-1} 
-\begin{kframe}\begin{alltt}
-\hlcom{#############}
-\end{alltt}
-\end{kframe}
+
 \end{knitrout}
+
+\subsection*{Figure 1: Difference in variance for the different estimators}
+
+In figure 1 the variance estimates for each beta coefficient for different sample sizes is presented. We can see that the variance decreases for all beta estimates the larger the sample size is. The feasible least squares estimates the lowest variance both when the variance form is true and false, i.e. is the most efficient estimator. We can say that the FWLS is BLUE. The plot clearly shows that OLS is inefficient, it looks to lack heteroscedasticity since the variance differs much depending on sample size. WLS is better than OLS but still has some bias.
+
+\pagebreak
 
 \section{EM algorithm for mixture of normals}
 
+Real world data can tend to come in shapes of clusters meaning that the normal distribution won’t be suitable for describing the generation of observations. However the normal distribution could still be utilized but as a linear combination with one distribution for every cluster (K). The expectation-maximation (EM) algorithm is a useful method for finding the maximum likelihood estimates for a mixture of normal models.
+
+In the following section an example of an implementation of the EM algorithm on the dataset galaxies will be carried out. As for all clustering problems the question of the suiting number of clusters seldom has a clear cut answer and often requires further investigation. 
+
 \begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hlcom{##################################################}
-\hlcom{# start of part2}
-\hlcom{##################################################}
-\hlstd{galaxies} \hlkwb{<-} \hlkwd{as.data.frame}\hlstd{(galaxies)}
-\hlkwd{names}\hlstd{(galaxies)} \hlkwb{<-} \hlstr{"km"}
-
-\hlkwd{ggplot}\hlstd{(galaxies,} \hlkwd{aes}\hlstd{(}\hlkwc{x} \hlstd{= km))} \hlopt{+}
-  \hlkwd{geom_density}\hlstd{()}
-\end{alltt}
-\end{kframe}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-7-1} 
-\begin{kframe}\begin{alltt}
-\hlstd{galaxies} \hlkwb{=} \hlstd{galaxies}\hlopt{$}\hlstd{km}
-
-\hlstd{gammaUpdate} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{mu}\hlstd{,} \hlkwc{sigma}\hlstd{,} \hlkwc{pi}\hlstd{)\{}
-  \hlstd{pdf} \hlkwb{=} \hlkwd{t}\hlstd{(}\hlkwd{sapply}\hlstd{(x, dnorm,} \hlkwc{mean} \hlstd{= mu,} \hlkwc{sd} \hlstd{= sigma))}
-  \hlkwa{for}\hlstd{(n} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(x))\{}
-    \hlkwa{for}\hlstd{(k} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(mu))\{}
-      \hlstd{pdf[n, k]} \hlkwb{=} \hlstd{pi[k]}\hlopt{*}\hlstd{pdf[n, k]}
-    \hlstd{\}}
-  \hlstd{\}}
-  \hlstd{gamma} \hlkwb{=} \hlkwd{as.data.frame}\hlstd{(}\hlkwd{matrix}\hlstd{(}\hlnum{NA}\hlstd{,} \hlkwc{ncol} \hlstd{=} \hlkwd{length}\hlstd{(pi),} \hlkwc{nrow} \hlstd{=} \hlkwd{length}\hlstd{(x)))}
-  \hlkwa{for}\hlstd{(n} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(x))\{}
-    \hlkwa{for}\hlstd{(k} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(mu))\{}
-      \hlstd{gamma[n, k]} \hlkwb{=} \hlstd{pdf[n, k]}\hlopt{/}\hlkwd{sum}\hlstd{(pdf[n,])}
-    \hlstd{\}}
-  \hlstd{\}}
-  \hlkwd{return}\hlstd{(}\hlkwd{as.data.frame}\hlstd{(gamma))}
-\hlstd{\}}
-
-\hlcom{# mu}
-\hlstd{muUpdate} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{gamma}\hlstd{)\{}
-  \hlstd{K} \hlkwb{<-} \hlkwd{ncol}\hlstd{(gamma)}
-  \hlstd{mu} \hlkwb{<-} \hlkwa{NULL}
-  \hlkwa{for} \hlstd{(i} \hlkwa{in} \hlkwd{seq_len}\hlstd{(K)) \{}
-    \hlstd{mu[i]} \hlkwb{<-} \hlkwd{sum}\hlstd{(gamma[,i]}\hlopt{*}\hlstd{x)}\hlopt{/}\hlkwd{sum}\hlstd{(gamma[,i])}
-  \hlstd{\}}
-  \hlkwd{return}\hlstd{(mu)}
-\hlstd{\}}
-
-
-\hlcom{### Sigma}
-\hlstd{sigmaUpdate} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{gamma}\hlstd{,} \hlkwc{mu}\hlstd{)\{}
-  \hlstd{N} \hlkwb{=} \hlkwd{matrix}\hlstd{(}\hlnum{0}\hlstd{,} \hlkwc{ncol}\hlstd{=} \hlkwd{ncol}\hlstd{(gamma))}
-  \hlstd{sigma} \hlkwb{=} \hlkwd{matrix}\hlstd{(}\hlnum{0}\hlstd{,} \hlkwc{ncol} \hlstd{=} \hlkwd{ncol}\hlstd{(gamma))}
-  \hlkwa{for}\hlstd{(k} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{ncol}\hlstd{(gamma))\{}
-    \hlkwa{for}\hlstd{(n} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(x))\{}
-      \hlstd{sigma[k]} \hlkwb{=} \hlstd{sigma[k]} \hlopt{+} \hlstd{gamma[n,k]}\hlopt{*}\hlstd{(x[n]}\hlopt{-}\hlstd{mu[k])}\hlopt{^}\hlnum{2}
-      \hlstd{N[k]} \hlkwb{=} \hlstd{N[k]} \hlopt{+} \hlstd{gamma[n,k]}
-    \hlstd{\}}
-    \hlstd{sigma[k]} \hlkwb{=} \hlkwd{sqrt}\hlstd{(sigma[k]}\hlopt{/}\hlstd{N[k])}
-  \hlstd{\}}
-  \hlkwd{return}\hlstd{(sigma)}
-\hlstd{\}}
-
-\hlstd{piUpdate} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{gamma}\hlstd{)\{}
-  \hlstd{pi} \hlkwb{<-} \hlkwa{NULL}
-  \hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{ncol}\hlstd{(gamma)) \{}
-    \hlstd{pi[i]} \hlkwb{<-} \hlkwd{sum}\hlstd{(gamma[,i])}\hlopt{/}\hlkwd{sum}\hlstd{(gamma)}
-  \hlstd{\}}
-  \hlkwd{return}\hlstd{(pi)}
-\hlstd{\}}
-
-\hlcom{### Log-likelihood }
-\hlstd{loglik} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{pi}\hlstd{,} \hlkwc{mu}\hlstd{,} \hlkwc{sigma}\hlstd{)\{}
-  \hlstd{sum_pdf} \hlkwb{=} \hlkwd{matrix}\hlstd{(}\hlnum{0}\hlstd{,} \hlkwc{nrow} \hlstd{=} \hlkwd{length}\hlstd{(x))}
-  \hlstd{loglike} \hlkwb{=} \hlnum{0}
-  \hlkwa{for}\hlstd{(n} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(x))\{}
-
-    \hlkwa{for}\hlstd{(k} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(pi))\{}
-      \hlstd{sum_pdf[n]} \hlkwb{=} \hlstd{sum_pdf[n]} \hlopt{+} \hlstd{(pi[k]} \hlopt{*} \hlkwd{dnorm}\hlstd{(x[n], mu[k], sigma[k]))}
-    \hlstd{\}}
-    \hlstd{loglike} \hlkwb{=} \hlstd{loglike} \hlopt{+} \hlkwd{log}\hlstd{(sum_pdf[n])}
-  \hlstd{\}}
-  \hlkwd{return}\hlstd{(loglike)}
-\hlstd{\}}
-
-\hlstd{initialValues} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{K}\hlstd{,} \hlkwc{reps} \hlstd{=} \hlnum{100}\hlstd{)\{}
-  \hlstd{mu} \hlkwb{=} \hlkwd{rnorm}\hlstd{(K,} \hlkwd{mean}\hlstd{(x),} \hlnum{5}\hlstd{)}
-  \hlstd{sigma} \hlkwb{=} \hlkwd{sqrt}\hlstd{(}\hlkwd{rgamma}\hlstd{(K,} \hlnum{5}\hlstd{))}
-  \hlstd{p} \hlkwb{=} \hlkwd{runif}\hlstd{(K)}
-  \hlstd{p} \hlkwb{=} \hlstd{p}\hlopt{/}\hlkwd{sum}\hlstd{(p)}
-  \hlstd{currentLogLik} \hlkwb{=} \hlkwd{loglik}\hlstd{(x, p, mu, sigma)}
-  \hlkwa{for}\hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlstd{reps)\{}
-    \hlstd{mu_temp} \hlkwb{=} \hlkwd{rnorm}\hlstd{(K,} \hlkwd{mean}\hlstd{(x),} \hlnum{10}\hlstd{)}
-    \hlstd{sigma_temp} \hlkwb{=} \hlkwd{sqrt}\hlstd{(}\hlkwd{rgamma}\hlstd{(}\hlnum{10}\hlstd{,} \hlnum{5}\hlstd{))}
-    \hlstd{p_temp} \hlkwb{=} \hlkwd{runif}\hlstd{(K)}
-    \hlstd{p_temp} \hlkwb{=} \hlstd{p_temp}\hlopt{/}\hlkwd{sum}\hlstd{(p_temp)}
-    \hlstd{tempLogLik} \hlkwb{=} \hlkwd{loglik}\hlstd{(x, p_temp, mu_temp, sigma_temp)}
-    \hlkwa{if}\hlstd{(tempLogLik} \hlopt{>} \hlstd{currentLogLik)\{}
-      \hlstd{mu} \hlkwb{=} \hlstd{mu_temp}
-      \hlstd{sigma} \hlkwb{=} \hlstd{sigma_temp}
-      \hlstd{p} \hlkwb{=} \hlstd{p_temp}
-      \hlstd{currentLogLik} \hlkwb{=} \hlstd{tempLogLik}
-    \hlstd{\}}
-  \hlstd{\}}
-  \hlkwd{return}\hlstd{(}\hlkwd{list}\hlstd{(}\hlstr{"mu"} \hlstd{= mu,} \hlstr{"sigma"} \hlstd{= sigma,} \hlstr{"p"} \hlstd{= p))}
-\hlstd{\}}
-
-\hlcom{##################################################}
-\hlcom{# EM algo}
-\hlcom{##################################################}
-\hlstd{EM} \hlkwb{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{K}\hlstd{,} \hlkwc{tol} \hlstd{=} \hlnum{0.001}\hlstd{)\{}
-  \hlstd{inits} \hlkwb{=} \hlkwd{initialValues}\hlstd{(x, K,} \hlnum{1000}\hlstd{)}
-  \hlstd{mu} \hlkwb{=} \hlstd{inits}\hlopt{$}\hlstd{mu}
-  \hlstd{sigma} \hlkwb{=} \hlstd{inits}\hlopt{$}\hlstd{sigma}
-  \hlstd{prob} \hlkwb{=} \hlstd{inits}\hlopt{$}\hlstd{p}
-
-  \hlstd{prevLoglik} \hlkwb{<-} \hlnum{0}
-  \hlstd{loglikDiff}\hlkwb{<-} \hlnum{1}
-
-  \hlcom{# while loop}
-  \hlkwa{while}\hlstd{(loglikDiff} \hlopt{>} \hlstd{tol)\{}
-
-    \hlstd{gamma} \hlkwb{<-} \hlkwd{gammaUpdate}\hlstd{(x, mu, sigma, prob)}
-    \hlstd{mu} \hlkwb{<-} \hlkwd{muUpdate}\hlstd{(x, gamma)}
-    \hlstd{sigma} \hlkwb{<-} \hlkwd{sigmaUpdate}\hlstd{(x, gamma, mu)}
-    \hlstd{prob} \hlkwb{<-} \hlkwd{piUpdate}\hlstd{(gamma)}
-
-    \hlstd{currentLogLik} \hlkwb{<-} \hlkwd{loglik}\hlstd{(x, prob, mu, sigma)}
-
-    \hlstd{loglikDiff} \hlkwb{<-} \hlkwd{abs}\hlstd{(prevLoglik} \hlopt{-} \hlstd{currentLogLik)}
-
-    \hlstd{prevLoglik} \hlkwb{<-} \hlstd{currentLogLik}
-
-  \hlstd{\}}
-
-  \hlkwd{return}\hlstd{(}\hlkwd{list}\hlstd{(}\hlstr{'loglik'} \hlstd{= currentLogLik,} \hlstr{'mu'} \hlstd{= mu,} \hlstr{'sigma'} \hlstd{= sigma,} \hlstr{'prob'} \hlstd{= prob))}
-\hlstd{\}}
-
-\hlkwd{set.seed}\hlstd{(}\hlnum{1996}\hlstd{)}
-\hlstd{final_plot} \hlkwb{=} \hlkwd{matrix}\hlstd{(}\hlnum{0}\hlstd{,} \hlkwc{ncol} \hlstd{=} \hlnum{4}\hlstd{,} \hlkwc{nrow}\hlstd{=} \hlkwd{length}\hlstd{(galaxies))}
-\hlstd{loglik_values} \hlkwb{=} \hlkwa{NULL}
-\hlkwa{for}\hlstd{(k} \hlkwa{in} \hlnum{2}\hlopt{:}\hlnum{5}\hlstd{)\{}
-  \hlstd{z} \hlkwb{=} \hlkwd{EM}\hlstd{(galaxies, k)}
-  \hlstd{loglik_values[(k}\hlopt{-}\hlnum{1}\hlstd{)]} \hlkwb{=} \hlstd{z}\hlopt{$}\hlstd{loglik}
-  \hlkwa{for}\hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlstd{k)\{}
-    \hlstd{final_plot[,(k}\hlopt{-}\hlnum{1}\hlstd{)]} \hlkwb{=} \hlstd{final_plot[,(k}\hlopt{-}\hlnum{1}\hlstd{)]} \hlopt{+} \hlstd{z}\hlopt{$}\hlstd{prob[i]} \hlopt{*} \hlkwd{dnorm}\hlstd{(galaxies, z}\hlopt{$}\hlstd{mu[i], z}\hlopt{$}\hlstd{sigma[i])}
-  \hlstd{\}}
-\hlstd{\}}
-
-\hlstd{loglik_values} \hlkwb{<-} \hlkwd{as.data.frame}\hlstd{(loglik_values)} \hlopt{%>%}
-  \hlkwd{mutate}\hlstd{(}\hlstr{"K"} \hlstd{= (}\hlnum{2}\hlopt{:}\hlnum{5}\hlstd{))}
-
-\hlstd{loglik_plot} \hlkwb{=} \hlkwd{ggplot}\hlstd{(}\hlkwc{data} \hlstd{= loglik_values)} \hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=K,} \hlkwc{y}\hlstd{=loglik_values),} \hlkwc{color} \hlstd{=} \hlstr{"blue"}\hlstd{)} \hlopt{+}
-  \hlkwd{labs}\hlstd{(}\hlkwc{x}\hlstd{=}\hlstr{"Number of components"}\hlstd{,}\hlkwc{y}\hlstd{=} \hlstr{"Log likelihood"}\hlstd{)}
-\hlstd{loglik_plot}
-\end{alltt}
-\end{kframe}
-\includegraphics[width=\maxwidth]{figure/unnamed-chunk-7-2} 
-\begin{kframe}\begin{alltt}
-\hlstd{final_plot} \hlkwb{=} \hlkwd{as.data.frame}\hlstd{(final_plot)}
-\hlkwd{colnames}\hlstd{(final_plot)} \hlkwb{=} \hlkwd{c}\hlstd{(}\hlstr{"K = 2"}\hlstd{,} \hlstr{"K = 3"}\hlstd{,} \hlstr{"K = 4"}\hlstd{,} \hlstr{"K = 5"}\hlstd{)}
-\hlstd{final_plot} \hlkwb{=} \hlkwd{cbind}\hlstd{(final_plot, galaxies)}
-
-\hlkwd{ggplot}\hlstd{(}\hlkwc{data} \hlstd{= final_plot,} \hlkwd{aes}\hlstd{(}\hlkwc{x} \hlstd{= galaxies))} \hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwd{aes}\hlstd{(}\hlkwc{y} \hlstd{= `K = 2`,} \hlkwc{color} \hlstd{=} \hlstr{"K = 2"}\hlstd{),} \hlkwc{size} \hlstd{=} \hlnum{1}\hlstd{)} \hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwd{aes}\hlstd{(}\hlkwc{y} \hlstd{= `K = 3`,} \hlkwc{color} \hlstd{=} \hlstr{"K = 3"}\hlstd{),} \hlkwc{size} \hlstd{=} \hlnum{1}\hlstd{)} \hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwd{aes}\hlstd{(}\hlkwc{y} \hlstd{= `K = 4`,} \hlkwc{color} \hlstd{=} \hlstr{"K = 4"}\hlstd{),} \hlkwc{size} \hlstd{=} \hlnum{1}\hlstd{)} \hlopt{+}
-  \hlkwd{geom_line}\hlstd{(}\hlkwd{aes}\hlstd{(}\hlkwc{y} \hlstd{= `K = 5`,} \hlkwc{color} \hlstd{=} \hlstr{"K = 5"}\hlstd{),} \hlkwc{size} \hlstd{=} \hlnum{1}\hlstd{)} \hlopt{+}
-  \hlkwd{geom_density}\hlstd{(}\hlkwd{aes}\hlstd{(}\hlkwc{fill} \hlstd{=} \hlstr{"Density plot"}\hlstd{),} \hlkwc{color} \hlstd{=} \hlstr{"pink"}\hlstd{,} \hlkwc{alpha} \hlstd{=} \hlnum{0.2}\hlstd{,} \hlkwc{size} \hlstd{=} \hlnum{0}\hlstd{)} \hlopt{+}
-  \hlkwd{labs}\hlstd{(}\hlkwc{x} \hlstd{=} \hlstr{"km"}\hlstd{,} \hlkwc{y} \hlstd{=} \hlstr{"Density"}\hlstd{,}\hlkwc{title}\hlstd{=}\hlstr{"Plot of different values of K and the density plot of galaxies"}\hlstd{)} \hlopt{+}
-  \hlkwd{theme}\hlstd{(}\hlkwc{legend.title} \hlstd{=} \hlkwd{element_blank}\hlstd{(),}\hlkwc{legend.position} \hlstd{=} \hlkwd{c}\hlstd{(}\hlnum{.95}\hlstd{,} \hlnum{.95}\hlstd{),}
-        \hlkwc{legend.justification} \hlstd{=} \hlkwd{c}\hlstd{(}\hlstr{"right"}\hlstd{,} \hlstr{"top"}\hlstd{),}
-        \hlkwc{legend.box.just} \hlstd{=} \hlstr{"right"}\hlstd{,}
-        \hlkwc{legend.margin} \hlstd{=} \hlkwd{margin}\hlstd{(}\hlnum{6}\hlstd{,} \hlnum{6}\hlstd{,} \hlnum{6}\hlstd{,} \hlnum{6}\hlstd{))}
-\end{alltt}
-\end{kframe}
-\includegraphics[width=\maxwidth]{figure/unnamed-chunk-7-3} 
 
 \end{knitrout}
+
+\subsection*{Figure 2: Distribution of the raw data}
+
+In figure 2 we can see a density plot of the data set galaxies. By examining the plot we think that three groups would be suitable to describe the data, first group that covers the area around 10 km, second in the larger area in the middle, and third that has its mean between 30 and 35 km.
+
+\subsection*{Implementing the steps with functions}
+
+To be able to practically implement the EM-algorithm, several functions are created. Below follows a description of all the functions used.
+
+
+
+\subsubsection*{gammaUpdate}
+The gammaUpdate function computes the E step in the EM function, that is computes the updates of $ \gamma(z_{nk})  $. The input of the function is a data set, in this case the galaxies data, and the values of sigma, mu and pi. The function then returns a $n \cdot  K$ matrix of $\gamma{z_{nk}}  $  values, where n is the number of observations in the galaxies data and K is the number of clusters. In this return, every row sums to 1.
+
+
+
+\subsubsection*{muUpdate}
+
+The muUpdate function takes a data variable and a gamma variable as input and then calculates and returns a new $\mu$ for all of the clusters.
+
+
+
+\subsubsection*{sigmaUpdate}
+The sigmaUpdate function takes a data variable and the values of gamma and mu as input and calculates and returns a new $\sigma_k$ for each cluster.  
+
+
+
+\subsubsection*{piUpdate}
+
+The piUpdate function takes a gamma variable as input and then calculates and returns a new $\pi$ for all clusters.
+
+
+
+\subsubsection*{loglik}
+The loglik-function computes the log-likelihood of the data for given parameters. The function takes the galaxies data and value of pi, mu and sigma as input and then calculates the log-likelihood by looping through the clusters and the rows in the input data. The function then returns the log-likelihood.
+
+
+
+\subsubsection*{initialValues}
+
+The initialValues function randomly computes the initial values for $\mu$, $\sigma$ and $\pi$ and computes the initial log-likelihood. It repeats this process 100 times and only saves the values if the new log-likelihood is higher than the last one. The function returns $\mu$, $\sigma$, $\pi$ and the log-likelihood.
+
+
+
+\subsubsection*{EM}
+
+The EM function combines all the pre-existing functions and performs the full EM-algorithm. First it initializes some starting values for $\mu$, $\sigma$ and $\pi$ and computes the initial log-likelihood (step 1). It then computes $\gamma$ (step 2), re-estimates the parameters (step 3) and evaluates the new log-likelihood (step 4). By the use of a while loop step 2 to step 4 is repeated until the absolute change in log-likelihood is less than 0.001. The function takes in a vector of data points and a variable with a value corresponding to the desired number of clusters. The function returns a list containing the values of log-likelihood, the mean, the standard deviation and the partitions of the clusters.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-15-1} 
+
+\end{knitrout}
+
+\subsection*{Figure 3: Log likelihood for each number of components}
+
+In figure 3 we can see the number of components and their respective log likelihoods. The results show that the log likelihood increases as the number of components K increases. It is very reasonable that the likelihood increases as the number of partitions increases but it won’t be very useful to solely focus on the value of the log likelihood. Too many clusters won’t be practical instead it would be more appropriate to focus on the marginal increase in log-likelihood as the number of components increases. The plot shows that the marginal increase in log-likelihood stagnates after 3 components motivating the choice of 3 clusters. However since initial values in the EM-algorithm are generated randomly the local log-likelihood optimums may differ meaning that if we were to re-apply the EM-algorithm we would possibly observe different gradients in the plot.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-16-1} 
+
+\end{knitrout}
+
+\subsection{Figure 4: Plot of different values of K and the density plot of galaxies}
+
+In figure 4 a comparison for different values of K, components, when running the EM algorithm is presented. When comparing the density plot with all the distributions the model with 4 partitions seems to fit the data best. However, when looking back at figure 3, we see that the increase in log-likelihood is very small when going from 3 to 4 components. Keeping in mind that the number of observations are quite low in this dataset, a partition of 3 is argueably more suitable since a partition of 4 or higher may run the risk of resulting in overfitting. 
 
 \end{document}

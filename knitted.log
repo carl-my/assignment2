@@ -1,0 +1,229 @@
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019/Debian) (preloaded format=xelatex 2020.5.29)  14 OCT 2020 12:10
+entering extended mode
+ restricted \write18 enabled.
+ file:line:error style messages enabled.
+ %&-line parsing enabled.
+**knitted.tex
+(./knitted.tex
+LaTeX2e <2020-02-02> patch level 2
+L3 programming layer <2020-02-14>
+(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2019/12/20 v1.4l Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2019/12/20 v1.4l Standard LaTeX file (size option)
+)
+\c@part=\count163
+\c@section=\count164
+\c@subsection=\count165
+\c@subsubsection=\count166
+\c@paragraph=\count167
+\c@subparagraph=\count168
+\c@figure=\count169
+\c@table=\count170
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen134
+)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2019/11/30 v1.2a Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2019/11/30 v1.4a Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: xetex.def on input line 105.
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-def/xetex.def
+File: xetex.def 2017/06/24 v5.0h Graphics/color driver for xetex
+))
+\Gin@req@height=\dimen135
+\Gin@req@width=\dimen136
+)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2019/11/23 v1.2a Standard LaTeX Color (DPC)
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: xetex.def on input line 147.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/framed/framed.sty
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip49
+\fb@frw=\dimen137
+\fb@frh=\dimen138
+\FrameRule=\dimen139
+\FrameSep=\dimen140
+)
+(/usr/share/texlive/texmf-dist/tex/latex/base/alltt.sty
+Package: alltt 1997/06/16 v2.0g defines alltt environment
+)
+(/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+
+(/usr/share/texlive/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2019/11/07 v1.0c TeX engine tests
+))
+\Gm@cnth=\count171
+\Gm@cntv=\count172
+\c@Gm@tempcnt=\count173
+\Gm@bindingoffset=\dimen141
+\Gm@wd@mp=\dimen142
+\Gm@odd@mp=\dimen143
+\Gm@even@mp=\dimen144
+\Gm@layoutwidth=\dimen145
+\Gm@layoutheight=\dimen146
+\Gm@layouthoffset=\dimen147
+\Gm@layoutvoffset=\dimen148
+\Gm@dimlist=\toks15
+)
+(/usr/share/texlive/texmf-dist/tex/latex/upquote/upquote.sty
+Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
+tim
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+))
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-xdvipdfmx.def
+File: l3backend-xdvipdfmx.def 2020-02-03 L3 backend support: xdvipdfmx
+\g__graphics_track_int=\count174
+\l__pdf_internal_box=\box45
+\g__pdf_backend_object_int=\count175
+\g__pdf_backend_annotation_int=\count176
+)
+(./knitted.aux)
+\openout1 = `knitted.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 59.
+LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 5
+9.
+ (/usr/share/texlive/texmf-dist/tex/latex/base/ts1cmr.fd
+File: ts1cmr.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 59.
+LaTeX Font Info:    ... okay on input line 59.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+*geometry* verbose mode - [ preamble ] result:
+* driver: xetex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 469.75502pt, 72.26999pt)
+* v-part:(T,H,B)=(72.26999pt, 650.43001pt, 72.26999pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=469.75502pt
+* \textheight=650.43001pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-37.0pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 60.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 60.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 60.
+[1
+
+]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 76.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 76.
+Missing character: There is no ’ in font cmr10!
+Missing character: There is no ’ in font cmr10!
+Missing character: There is no ’ in font cmr10!
+Missing character: There is no ’ in font cmr10!
+Missing character: There is no ’ in font cmr10!
+Missing character: There is no ’ in font cmr10!
+Package color Info: Redefining color shadecolor on input line 107.
+File: figure/unnamed-chunk-6-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-6-1.pdf>
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 108--109
+[][] 
+ []
+
+[2] [3]
+Package color Info: Redefining color shadecolor on input line 125.
+File: figure/unnamed-chunk-7-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-7-1.pdf>
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 126--127
+[][] 
+ []
+
+[4]
+Package color Info: Redefining color shadecolor on input line 178.
+File: figure/unnamed-chunk-15-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-15-1.pdf>
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 179--180
+[][] 
+ []
+
+[5]
+Package color Info: Redefining color shadecolor on input line 188.
+File: figure/unnamed-chunk-16-1.pdf Graphic file (type pdf)
+<use figure/unnamed-chunk-16-1.pdf>
+
+Overfull \hbox (15.0pt too wide) in paragraph at lines 189--190
+[][] 
+ []
+
+[6] [7] (./knitted.aux) ) 
+Here is how much of TeX's memory you used:
+ 1541 strings out of 479819
+ 24177 string characters out of 5895846
+ 278112 words of memory out of 5000000
+ 18668 multiletter control sequences out of 15000+600000
+ 535138 words of font info for 41 fonts, out of 8000000 for 9000
+ 1348 hyphenation exceptions out of 8191
+ 30i,7n,34p,1151b,240s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+Output written on knitted.pdf (7 pages).
