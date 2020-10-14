@@ -79,9 +79,7 @@ wlsFun <- function(data, lambda){
 To estimate the beta for the weighted least squares estimator we used the two vector dataset and set column one to \textbf{y} and column two to \textbf{X}, where \textbf{y} is the dependent variable and \textbf{X} the explanatory variable. Then an extra intercept column of n rows has been added to \textbf{X}. To be able to get the error covariance matrix $\omega$ we added a zero matrix of size n x n. By running a for loop where the exponent of \textbf{X} times $\lambda$ is added on the diagonal in the zero matrix calculates our $\omega$. The value of the weighted least square estimator is then computed by: 
 $\hat{\beta}_{WLS}=(\textbf{X}’\Omega({\lambda})^{-1}\textbf{X})^{-1}\textbf{X}’\Omega({\lambda})^{-1}\textbf{y}$. The function checks that $\lambda$ is numeric, if not it prints “lambda is not numeric”.
 
-
 <<echo=FALSE>>=
-
 fwlsFun <- function(data, trueVar){
   y = data[,1]                             # y is given the value of the first column in the data  
   N <- nrow(data)                          # N is given the value of the number of rows in the data
@@ -193,36 +191,37 @@ The function SimFun uses all the pre-existing functions to generate data and fit
 
 <<echo=FALSE>>=
 ##### 4. Plot variance estimates
+## create variable for the different values on n
 x <- c(25, 50, 100, 200, 400)
 
+## make zero matrix to use in for loop
 var_obs <- matrix(0, ncol = 4, nrow = 5)
 
 for (i in seq_along(x)) {
     var_obs[i,] <- (SimFun(x[i], 100, 2020, 2))
 }
-
+### pute variance estimates in a data frame
 var_obs = as.data.frame(var_obs)
 rownames(var_obs) = c(25, 50, 100, 200, 400)
 
-
+### add column and row names
 colnames(var_obs) = c("OLS","WLS","FWLST","FWLSF")
 rownames(var_obs) = c("25","50","100","200","400")
 
+### create line plot with sample size on x-axis and variance estimate on y-axis
 ggplot(as.data.frame(var_obs),aes(x=as.numeric(rownames(var_obs)))) +
   geom_line(aes(y = OLS, colour = "OLS")) + 
   geom_line(aes(y = WLS, colour = "WLS")) +
   geom_line(aes(y = FWLST, colour = "FWLST")) + 
   geom_line(aes(y = FWLSF, colour = "FWLSF")) +
-  labs(x="Number of obsvervations",y="Variance",
-       title="Variance estimates of beta for each function vs sample size") +
+  labs(x="Number of obsvervations",y="Variance") +
   theme(legend.title = element_blank()) +
   theme(panel.grid.minor = element_blank()) +
   scale_x_continuous(breaks=c(25,50,100,200,400),limits=c(25, 400))
 
 #############
 @
-
-\subsection*{Figure 1: Difference in variance for the different estimators}
+\subsection*{Figure 1: Variance estimates of beta for each function for different sample size}
 
 In figure 1 the variance estimates for each beta coefficient for different sample sizes is presented. We can see that the variance decreases for all beta estimates the larger the sample size is. The feasible least squares estimates the lowest variance both when the variance form is true and false, i.e. is the most efficient estimator. We can say that the FWLS is BLUE. The plot clearly shows that OLS is inefficient, it looks to lack heteroscedasticity since the variance differs much depending on sample size. WLS is better than OLS but still has some bias.
 
@@ -334,15 +333,19 @@ sigmaUpdate = function(x, gamma, mu){
 @
 
 \subsubsection*{sigmaUpdate}
+
 The sigmaUpdate function takes a data variable and the values of gamma and mu as input and calculates and returns a new $\sigma_k$ for each cluster.  
 
 <<echo=FALSE>>=
+### Pi
 piUpdate = function(gamma){
-    pi <- NULL
-    for (i in 1:ncol(gamma)) {
-        pi[i] <- sum(gamma[,i])/sum(gamma)
-    }
-    return(pi)
+  pi <- NULL
+  ## a for loop for every cluster that takes the sum of each column gamma
+  ## divided with the sum of gamma
+  for (i in 1:ncol(gamma)) {
+    pi[i] <- sum(gamma[,i])/sum(gamma)
+  }
+  return(pi)
 }
 @
 
@@ -472,13 +475,14 @@ for(k in 2:5){
     }
 }
 
-loglik_values <- as.data.frame(loglik_values) %>%
-    mutate("K" = (2:5))
+### Plot log likelihood for different values on K
+loglik_values <- as.data.frame(loglik_values) %>%  ## convert loglik values to data frame and add one column "K"
+  mutate("K" = (2:5))
 
-loglik_plot = ggplot(data = loglik_values) +
-    geom_line(aes(x=K, y=loglik_values), color = "blue") +
-    labs(x="Number of components",y= "Log likelihood")
-
+### create density plot with number of K:s on x-axis and log likelihood on y-axis
+loglik_plot = ggplot(data = loglik_values) + 
+  geom_line(aes(x=K, y=loglik_values), color = "blue") +
+  labs(x="Number of components",y= "Log likelihood")
 loglik_plot
 @
 
@@ -503,9 +507,7 @@ ggplot(data = final_plot, aes(x = galaxies)) +
           legend.box.just = "right",
           legend.margin = margin(6, 6, 6, 6)) 
 @
-
 \subsection{Figure 4: Plot of different values of K and the density plot of galaxies}
 
 In figure 4 a comparison for different values of K, components, when running the EM algorithm is presented. When comparing the density plot with all the distributions the model with 4 partitions seems to fit the data best. However, when looking back at figure 3, we see that the increase in log-likelihood is very small when going from 3 to 4 components. Keeping in mind that the number of observations are quite low in this dataset, a partition of 3 is argueably more suitable since a partition of 4 or higher may run the risk of resulting in overfitting. 
-
 \end{document}
