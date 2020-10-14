@@ -77,7 +77,7 @@ wlsFun <- function(data, lambda){
 \subsubsection*{Weighted least squares}
 
 To estimate the beta for the weighted least squares estimator we used the two vector dataset and set column one to \textbf{y} and column two to \textbf{X}, where \textbf{y} is the dependent variable and \textbf{X} the explanatory variable. Then an extra intercept column of n rows has been added to \textbf{X}. To be able to get the error covariance matrix $\omega$ we added a zero matrix of size n x n. By running a for loop where the exponent of \textbf{X} times $\lambda$ is added on the diagonal in the zero matrix calculates our $\omega$. The value of the weighted least square estimator is then computed by: 
-$\hat{\beta}_{WLS}=(\textbf{X}’\Omega({\lambda})^{-1}\textbf{X})^{-1}\textbf{X}’\Omega({\lambda})^{-1}\textbf{y}$.
+$\hat{\beta}_{WLS}=(\textbf{X}’\Omega({\lambda})^{-1}\textbf{X})^{-1}\textbf{X}’\Omega({\lambda})^{-1}\textbf{y}$. The function checks that $\lambda$ is numeric, if not it prints “lambda is not numeric”.
 
 
 <<echo=FALSE>>=
