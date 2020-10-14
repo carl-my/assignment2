@@ -278,9 +278,11 @@ muUpdate = function(x, gamma){
 
 ### Sigma
 sigmaUpdate = function(x, gamma, mu){
-  N = matrix(0, ncol= ncol(gamma))
-  sigma = matrix(0, ncol = ncol(gamma))
+  N = matrix(0, ncol= ncol(gamma))          # A vector of zeros to be filled with the sum of gamma values in one cluster 
+  sigma = matrix(0, ncol = ncol(gamma))     # A vector of zeros to be filled with the K values of sigma
+  # a for loop that for every cluster...
   for(k in 1:ncol(gamma)){
+    # ... goes through every row in x
     for(n in 1:length(x)){
       sigma[k] = sigma[k] + gamma[n,k]*(x[n]-mu[k])^2
       N[k] = N[k] + gamma[n,k]
